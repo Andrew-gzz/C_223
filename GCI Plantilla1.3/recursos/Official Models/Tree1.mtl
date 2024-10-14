@@ -1,0 +1,20 @@
+newmtl _Cherry_tree_branch_v2_l2:Material__94
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd 12975_Cherry_Tree_Branch_Leaves_diff.jpg
+map_Ka 12975_Cherry_Tree_Branch_Leaves_diff.jpg
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 10.00
+newmtl _Cherry_tree_branch_v2_l2:___Default
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd 12975_Cherry_Tree_Branch.jpg
+map_Ka 12975_Cherry_Tree_Branch.jpg
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 10.00

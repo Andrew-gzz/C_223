@@ -1,0 +1,76 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: light.ps
+////////////////////////////////////////////////////////////////////////////////
+#version 400
+
+
+/////////////////////
+// INPUT VARIABLES //
+/////////////////////
+in vec2 texCoord;
+in vec2 texCoordAlt;
+in vec3 normal;
+in vec3 tang;
+in vec3 binorm;
+
+//////////////////////
+// OUTPUT VARIABLES //
+//////////////////////
+out vec4 outputColor;
+
+
+///////////////////////
+// UNIFORM VARIABLES //
+///////////////////////
+uniform sampler2D shaderTexture;
+uniform sampler2D shaderTexture2;
+uniform sampler2D shaderTexture3;
+uniform vec3 lightDirection;
+uniform vec4 diffuseLightColor;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+void main(void)
+{
+	vec4 textureColor;
+	vec4 textureColor2;
+	vec4 alphaMap;
+
+	vec3 bump;
+	vec3 NewNormal;
+	vec3 normalaza;
+	vec3 lightDir;
+	float lightIntensity;
+
+
+	// Obtener la textura difusa o de color
+	textureColor = texture(shaderTexture, texCoord);
+	textureColor2 = texture(shaderTexture2, texCoord);
+	alphaMap = texture(shaderTexture3, texCoordAlt);
+
+	//obtener el mapa de normales
+	bump = texture(shaderTexture2, texCoord).rgb;
+	//el mapa de normales va de 0 a 1 o sea de 0 a 90 grados, debe pasar de -1 a 1 y -90 a 90 grados
+	bump = 2.0 * bump - vec3(1.0,1.0,1.0);
+	//incluir la tang la binormal y la normal
+	mat3 TBN = mat3(tang, binorm, normal);
+	//afectar el mapa de normales a la nueva posicion mundial
+	normalaza = TBN * bump; 
+	//normalizamos la normal y la multiplicamos por el vector de luz para generar sombras
+    NewNormal = normalize(normalaza);
+
+	// Invertimos la direccion de la luz para calculos.
+	lightDir = -lightDirection;
+
+	// Calcula el monto de luz segun el vector de luz y la normal de la textura.
+	lightIntensity = clamp(dot(NewNormal, lightDir), 0.0f, 1.0f);
+	float l2 = clamp(dot(normal, lightDir), 0.0f, 1.0f);
+	// Determine el monto de luz de color segun la resultante con la normal.
+	outputColor =  clamp((diffuseLightColor * lightIntensity), 0.0f, 1.0f);
+
+	// Multiplica la textura color final.
+	//outputColor = outputColor * textureColor + 0.1;
+	outputColor = (textureColor * alphaMap) + (textureColor2 * (1.0f - alphaMap));
+}
