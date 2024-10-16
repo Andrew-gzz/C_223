@@ -267,7 +267,7 @@ bool Scene::Render() {
 	OpenGL->GetProjectionMatrix(projectionMatrix);
 
 	// Renderizamos el Skydome
-	//Skydome->CicloInterpolaciones();
+	Skydome->CicloInterpolaciones();
 	Skydome->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos terreno

@@ -331,10 +331,10 @@ bool Dome::Interpolar1() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		// Codigo de color naranja en RG (255,165,0,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (10.00f / 255.00f),
-		//	this->coeficienteDeCambio * (10.00f / 165.00f),
-		//	this->coeficienteDeCambio * (10.00f / 1.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		this->RedefineColor(this->coeficienteDeCambio * (10.00f / 255.00f),
+			this->coeficienteDeCambio * (10.00f / 165.00f),
+			this->coeficienteDeCambio * (10.00f / 1.00f),
+			this->coeficienteDeCambio * 10.00f);
 		Redraw();
 		return false;
 	}
@@ -380,10 +380,10 @@ bool Dome::Interpolar2() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		//// Codigo de color negro deseado en RG (60,60,60,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (10.00f /60.00f),
-		//	this->coeficienteDeCambio * (10.00f / 60.00f),
-		//	this->coeficienteDeCambio * (10.00f / 60.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		this->RedefineColor(this->coeficienteDeCambio * (10.00f /60.00f),
+			this->coeficienteDeCambio * (10.00f / 60.00f),
+			this->coeficienteDeCambio * (10.00f / 60.00f),
+			this->coeficienteDeCambio * 10.00f);
 		Redraw();
 		return false;
 	}
@@ -397,10 +397,10 @@ bool Dome::Interpolar2() {
 		cicloLuz = 360; //Segundos en que permanece la textura actual
 		cicloInterpolacionSeg = 200; // Lo que me demoro en cambiar a la siguiente textura
 		// definimos el color que se supone debe inicializar para la siguiente fase
-		RedefineColor((65.00f / 255.00f),
-			(65.00f / 255.00f),
-			(65.00f / 255.00f),
-			(255.00f / 255.00f));
+		//RedefineColor((65.00f / 255.00f),
+		//	(65.00f / 255.00f),
+		//	(65.00f / 255.00f),
+		//	(255.00f / 255.00f));
 		Redraw();
 		elapsedTime = 0;
 		return true;
@@ -426,10 +426,10 @@ bool Dome::Interpolar3() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		//// Codigo de color blanco deseado en RG (230,230,230,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (1.00f / 230.00f),
-		//	this->coeficienteDeCambio * (10.00f / 230.00f),
-		//	this->coeficienteDeCambio * (10.00f / 230.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		this->RedefineColor(this->coeficienteDeCambio * (1.00f / 230.00f),
+			this->coeficienteDeCambio * (10.00f / 230.00f),
+			this->coeficienteDeCambio * (10.00f / 230.00f),
+			this->coeficienteDeCambio * 10.00f);
 		Redraw();
 		return false;
 	}
@@ -443,10 +443,10 @@ bool Dome::Interpolar3() {
 		cicloLuz = 360; //Segundos en que permanece la textura actual
 		cicloInterpolacionSeg = 200; // Lo que me demoro en cambiar a la siguiente textura
 		// definimos el color que se supone debe inicializar para la siguiente fase
-		RedefineColor((255.00f / 255.00f),
-			(255.00f / 255.00f),
-			(255.00f / 255.00f),
-			(255.00f / 255.00f));
+		//RedefineColor((255.00f / 255.00f),
+		//	(255.00f / 255.00f),
+		//	(255.00f / 255.00f),
+		//	(255.00f / 255.00f));
 		Redraw();
 		elapsedTime = 0;
 		return true;
