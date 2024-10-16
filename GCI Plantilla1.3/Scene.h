@@ -114,6 +114,7 @@ private:
 
 	//Variables de Rotacion
 	float angulo;
+	float angulo_Y;
 	float scale;
 	bool Reset;
 

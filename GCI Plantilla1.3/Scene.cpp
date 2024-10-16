@@ -17,6 +17,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	speedTAxisZ = 0.0f;
 	speed = 0.0f;
 	angulo = 0.0f;
+	angulo_Y = 0.0f;
 	Object3d = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
@@ -30,6 +31,7 @@ bool Scene::Initialize() {
 	string resultDetail = "";
 
 	angulo = 0.0f;
+	angulo_Y = 0.0f;
 	speedAxisX = SPEED_AXIS_X;
 	speedAxisY = SPEED_AXIS_Y;
 	speedTAxisX = SPEEDT_AXIS_X;
@@ -322,6 +324,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		return result;
 	}
 
+	/*float* matrixSkydome = Skydome->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixSkydome, 0.0f, 0.0f, 0.0f);*/
+
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 8.0f, 0.0f);
 
@@ -354,6 +359,10 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/*if (Object3d->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
+
+	// rotacion del skydome
+
+	/*Skydome->MatrixRotationY(matrixSkydome, angulo_Y);*/
 
 	//Colisión por caja
 	if (Object3d->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -483,6 +492,8 @@ bool Scene::ManageCommands() {
 	if (input->GetKey(KeyCode.Zero)) {
 		Object3d1->ChangeTexture(9, 9);
 	}
+
+	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
 
 	DeltaPosition->Y = Terreno->Superficie(DeltaPosition->X, DeltaPosition->Z) + 2;
 

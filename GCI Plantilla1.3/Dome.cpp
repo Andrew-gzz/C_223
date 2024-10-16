@@ -253,6 +253,8 @@ bool Dome::Initialize()
 
 bool Dome::Render(float* viewMatrix, float* projectionMatrix)
 {
+	AngleRotation < 360 ? AngleRotation += 0.001f : AngleRotation = 0;
+
 	// ** Definimos la escala **
 	MatrixScale();
 
