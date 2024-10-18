@@ -1,72 +1,12 @@
 # Blender 4.0.2 MTL File: 'None'
 # www.blender.org
 
-newmtl Material.005
+newmtl Color
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
-illum 1
-map_Kd Texturas/Wood 7.jpg.001.jpg
-
-newmtl Material.047
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Wood 15.jpg
-
-newmtl Material.050
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Wood (1).jpg
-
-newmtl Material.051
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Wood 17.jpg
-
-newmtl Material.052
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Wood 17.jpg
-
-newmtl Material.053
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Al (1).png
-
-newmtl Material.063
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd Texturas/Wood 17.jpg
+illum 2
+map_Kd Casa_Diffuse.png

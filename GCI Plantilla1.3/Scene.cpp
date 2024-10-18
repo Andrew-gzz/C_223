@@ -120,7 +120,7 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Objetos(EnUso)/Textures/Ammo.png");
 	Casa = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Edificios(EnUso)/Casa_Blanca.obj",
-		"recursos/Modelos/Edificios(EnUso)/Texturas/Wood (1).jpg");
+		"recursos/Modelos/Edificios(EnUso)/Casa_Diffuse.png");
 	Pistola = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Armas(EnUso)/Pistola.obj",
 		"recursos/Modelos/Armas(EnUso)/Makarov_Base_Color.png");
