@@ -19,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Textures/Colors.png
+map_Kd Textures/Ammo.png
 
 newmtl Texto
 Ns 250.000000

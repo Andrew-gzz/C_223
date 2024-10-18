@@ -1,4 +1,4 @@
-# Blender 4.0.2 MTL File: 'None'
+# Blender 4.0.2 MTL File: 'untitled.blend'
 # www.blender.org
 
 newmtl baseGradient.005
@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 387359c5580f06c08c266126b3b46db47e48ba44.png
+map_Kd Color.png
 
 newmtl blackGlass.005
 Ns 1000.000000
@@ -19,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Negro.png
+map_Kd Color.png
 
 newmtl flatBlack.002
 Ns 250.000000
@@ -29,7 +29,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd Negro.png
+map_Kd Color.png
 
 newmtl gradientEmmisive.005
 Ns 0.000000
@@ -38,5 +38,5 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 387359c5580f06c08c266126b3b46db47e48ba44.png
-map_Ke docLorean.fbm/387359c5580f06c08c266126b3b46db47e48ba44.png
+map_Kd Color.png
+map_Ke Color.png

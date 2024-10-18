@@ -18,7 +18,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	speed = 0.0f;
 	angulo = 0.0f;
 	angulo_Y = 0.0f;
-	Object3d = 0;
+	deLorean = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
 
@@ -108,64 +108,100 @@ bool Scene::Initialize() {
 		_RPT1(0, "Alert! ShaderModel has an error on declare and not been initialized. \n", 0);
 		return result;
 	}
+	//Importación del modelo
+	deLorean = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Carros(EnUso)/deLorean.obj",
+		"recursos/Modelos/Carros(EnUso)/Color.png");
+	Bochido = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Carros(EnUso)/Bochido.obj",
+		"recursos/Modelos/Carros(EnUso)/Color.png");
+	Municion = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Objetos(EnUso)/Ammo.obj",
+		"recursos/Modelos/Objetos(EnUso)/Textures/Ammo.png");
+	Casa = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Edificios(EnUso)/Casa_Blanca.obj",
+		"recursos/Modelos/Edificios(EnUso)/Texturas/Wood (1).jpg");
+	Pistola = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Armas(EnUso)/Pistola.obj",
+		"recursos/Modelos/Armas(EnUso)/Makarov_Base_Color.png");
+	MedKit = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Medkit(EnUso)/Medkit.obj",
+		"recursos/Modelos/Medkit(EnUso)/MedKit_Colors.png");
+	Fogata = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Objetos(EnUso)/Fogata.obj",
+		"recursos/Modelos/Objetos(EnUso)/Textures/Fogata.png");
+	Estanteria = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Objetos(EnUso)/Estanteria.obj",
+		"recursos/Modelos/Objetos(EnUso)/Textures/Estanteria.png");
 
-	Object3d = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/WarGreymon/WarGreymon.obj",
-		"recursos/WarGreymon/WarGreymon.png");
-	if (!Object3d) {
+	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d->Initialize();
+		result = deLorean->Initialize();
+		result = Bochido->Initialize(); 
+		result = Municion->Initialize();
+		result = Casa->Initialize();
+		result = Pistola->Initialize();
+		result = MedKit->Initialize();
+		result = Fogata->Initialize();
+		result = Estanteria->Initialize();
+
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Object3d->SetShaders(ShaderModel, ShaderBounding);
+		deLorean->SetShaders(ShaderModel, ShaderBounding);
+		Bochido->SetShaders(ShaderModel, ShaderBounding);
+		Municion->SetShaders(ShaderModel, ShaderBounding);
+		Casa->SetShaders(ShaderModel, ShaderBounding);
+		Pistola->SetShaders(ShaderModel, ShaderBounding);
+		MedKit->SetShaders(ShaderModel, ShaderBounding);
+		Fogata->SetShaders(ShaderModel, ShaderBounding);
+		Estanteria->SetShaders(ShaderModel, ShaderBounding);
+
 	}
 
-	Object3d1 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/Official Models/Tree1.obj",
-		"recursos/Official Models/Tree1T1.jpg");
-	if (!Object3d1) {
+/*
+	if (!Bochido) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d1->Initialize();
+		result = Bochido->Initialize(); 
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Object3d1->SetShaders(ShaderModel, ShaderBounding);
-		Object3d1->AddTexture("recursos/Official Models/Tree1T2.jpg");
+		Bochido->SetShaders(ShaderModel, ShaderBounding);
+		Bochido->AddTexture("recursos/Official Models/Tree1T2.jpg");
 	}
 
-	Object3d2 = new GameObject(OpenGL, handlerWindow, LoaderTexture, 
-		"recursos/WarGreymon/WarGreymon.obj",
-		"recursos/WarGreymon/WarGreymon.png");
-	if (!Object3d2) {
+
+	if (!Municion) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Object3d2->Initialize();
+		result = Municion->Initialize();
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
-		}
-		Object3d2->SetShaders(ShaderModel, ShaderBounding);
-	}
+		}		
+		Municion->AddTexture("recursos/Modelos/Objetos(EnUso)/Textures/Ammo.png");
+		Municion->SetShaders(ShaderModel, ShaderBounding);
+		
+	}*/
 
 	// Skydome
 	ShaderSky = new SkydomeShaderClass(OpenGL, handlerWindow, "shaders/SkydomeShader.vs", "shaders/SkydomeShader.ps");
@@ -277,10 +313,14 @@ bool Scene::Render() {
 	Triangulo->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos nuestros objetos en la escena
-	Object3d->Render(viewMatrix, projectionMatrix, true);
-	Object3d1->Render(viewMatrix, projectionMatrix, false);
-	Object3d2->Render(viewMatrix, projectionMatrix, true);
-
+	deLorean->Render(viewMatrix, projectionMatrix, true);
+	Bochido->Render(viewMatrix, projectionMatrix, true);
+	Municion->Render(viewMatrix, projectionMatrix, true);
+	Casa->Render(viewMatrix, projectionMatrix, true);  
+	Pistola->Render(viewMatrix, projectionMatrix, true);
+	MedKit->Render(viewMatrix, projectionMatrix, true);
+	Fogata->Render(viewMatrix, projectionMatrix, true);
+	Estanteria->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);
@@ -330,14 +370,29 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 8.0f, 0.0f);
 
-	float* matrixGameObject = Object3d->GetWorldMatrix();
+	float* matrixGameObject = deLorean->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 6.0f, -10.0f);
 
-	float* matrixGameObject1 = Object3d1->GetWorldMatrix();
+	float* matrixGameObject1 = Bochido->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 6.0f, -10.0f);
 
-	float* matrixGameObject2 = Object3d2->GetWorldMatrix();
+	float* matrixGameObject2 = Municion->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 6.0f, -10.0f);
+
+	float* matrixGameObject3 = Casa->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 6.0f, 20.0f);
+
+	float* matrixGameObject4 = Pistola->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 6.0f, -15.0f);
+
+	float* matrixGameObject5 = MedKit->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 6.0f, -17.0f);
+
+	float* matrixGameObject6 = Fogata->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject6, -22.0f, 6.0f, -17.0f);
+
+	float* matrixGameObject7 = Estanteria->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 6.0f, -17.0f);
 
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
@@ -356,7 +411,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);
 
 	//Colisión por esfera
-	/*if (Object3d->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
+	/*if (deLorean->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
@@ -365,18 +420,42 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/*Skydome->MatrixRotationY(matrixSkydome, angulo_Y);*/
 
 	//Colisión por caja
-	if (Object3d->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 
-	if (Object3d2->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
-
+	if (Casa->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (Pistola->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (MedKit->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (Fogata->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
 	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -463,34 +542,34 @@ bool Scene::ManageCommands() {
 	
 	
 	if (input->GetKey(KeyCode.One)) {
-		Object3d1->ChangeTexture(0,0);
+		Bochido->ChangeTexture(0,0);
 	}
 	if (input->GetKey(KeyCode.Two)) {
-		Object3d1->ChangeTexture(1, 1);
+		Bochido->ChangeTexture(1, 1);
 	}
 	if (input->GetKey(KeyCode.Three)) {
-		Object3d1->ChangeTexture(2, 2);
+		Bochido->ChangeTexture(2, 2);
 	}
 	if (input->GetKey(KeyCode.Four)) {
-		Object3d1->ChangeTexture(3, 3);
+		Bochido->ChangeTexture(3, 3);
 	}
 	if (input->GetKey(KeyCode.Five)) {
-		Object3d1->ChangeTexture(4, 4);
+		Bochido->ChangeTexture(4, 4);
 	}
 	if (input->GetKey(KeyCode.Six)) {
-		Object3d1->ChangeTexture(5, 5);
+		Bochido->ChangeTexture(5, 5);
 	}
 	if (input->GetKey(KeyCode.Seven)) {
-		Object3d1->ChangeTexture(6, 6);
+		Bochido->ChangeTexture(6, 6);
 	}
 	if (input->GetKey(KeyCode.Eight)) {
-		Object3d1->ChangeTexture(7, 7);
+		Bochido->ChangeTexture(7, 7);
 	}
 	if (input->GetKey(KeyCode.Nine)) {
-		Object3d1->ChangeTexture(8, 8);
+		Bochido->ChangeTexture(8, 8);
 	}
 	if (input->GetKey(KeyCode.Zero)) {
-		Object3d1->ChangeTexture(9, 9);
+		Bochido->ChangeTexture(9, 9);
 	}
 
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
@@ -525,10 +604,10 @@ bool Scene::Shutdown() {
 		Triangulo = 0;
 	}
 
-	if (Object3d) {
-		Object3d->Shutdown();
-		delete Object3d;
-		Object3d = 0;
+	if (deLorean) {
+		deLorean->Shutdown();
+		delete deLorean;
+		deLorean = 0;
 	}
 
 	return result;

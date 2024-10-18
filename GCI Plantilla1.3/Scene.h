@@ -94,9 +94,14 @@ private:
 	TextureClass* LoaderTexture;
 
 	//Objetos
-	GameObject* Object3d;
-	GameObject* Object3d1;
-	GameObject* Object3d2;
+	GameObject* deLorean;
+	GameObject* Bochido;
+	GameObject* Municion;
+	GameObject* Casa;
+	GameObject* Pistola;
+	GameObject* MedKit;
+	GameObject* Fogata;
+	GameObject* Estanteria;
 
 	//CollisionBox
 	BoundingBoxRenderer* box;
