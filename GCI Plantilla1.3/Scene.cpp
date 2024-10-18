@@ -28,6 +28,7 @@ Scene::~Scene() {
 
 bool Scene::Initialize() {
 	bool result = true;
+	
 	string resultDetail = "";
 
 	angulo = 0.0f;
@@ -132,9 +133,13 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Objetos(EnUso)/Textures/Fogata.png");
 	Estanteria = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Objetos(EnUso)/Estanteria.obj",
-		"recursos/Modelos/Objetos(EnUso)/Textures/Estanteria.png");
+		"recursos/Modelos/Objetos(EnUso)/Estanterias_Diffuse.png");
+	Tienda = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Edificios(EnUso)/Tienda.obj",
+		"recursos/Modelos/Edificios(EnUso)/Tienda_Diffuse.png");
 
-	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria) {
+
+	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
@@ -149,6 +154,7 @@ bool Scene::Initialize() {
 		result = MedKit->Initialize();
 		result = Fogata->Initialize();
 		result = Estanteria->Initialize();
+		
 
 		if (!result) {
 			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
@@ -163,27 +169,26 @@ bool Scene::Initialize() {
 		MedKit->SetShaders(ShaderModel, ShaderBounding);
 		Fogata->SetShaders(ShaderModel, ShaderBounding);
 		Estanteria->SetShaders(ShaderModel, ShaderBounding);
-
+		
 	}
 
-/*
-	if (!Bochido) {
+
+	if (!Tienda) {
 		result = false;
-		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		result = Bochido->Initialize(); 
+		result = Tienda->Initialize();
 		if (!result) {
-			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "Error", MB_OK);
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
 			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
 			return result;
 		}
-		Bochido->SetShaders(ShaderModel, ShaderBounding);
-		Bochido->AddTexture("recursos/Official Models/Tree1T2.jpg");
+		Tienda->SetShaders(ShaderModel, ShaderBounding);
 	}
-
+/*
 
 	if (!Municion) {
 		result = false;
@@ -321,6 +326,7 @@ bool Scene::Render() {
 	MedKit->Render(viewMatrix, projectionMatrix, true);
 	Fogata->Render(viewMatrix, projectionMatrix, true);
 	Estanteria->Render(viewMatrix, projectionMatrix, true);
+	Tienda->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);
@@ -394,6 +400,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixGameObject7 = Estanteria->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 6.0f, -17.0f);
 
+	float* matrixGameObject8 = Tienda->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 6.0f, 20.0f);
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
@@ -452,6 +460,11 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (Tienda->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;

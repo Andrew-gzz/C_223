@@ -102,6 +102,7 @@ private:
 	GameObject* MedKit;
 	GameObject* Fogata;
 	GameObject* Estanteria;
+	GameObject* Tienda;
 
 	//CollisionBox
 	BoundingBoxRenderer* box;
