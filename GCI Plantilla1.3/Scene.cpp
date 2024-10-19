@@ -73,7 +73,7 @@ bool Scene::Initialize() {
 	}
 
 	//Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/heightmap.jpg", "recursos/test.tga", "recursos/Piedras_normal.jpg",(float)400, (float)400, 0, 1);
-	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/heightmap.jpg", "recursos/texterr.jpg", "recursos/texterr2.jpg", "recursos/heightmap.jpg", (float)400, (float)400);
+	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/HMP.jpg", "recursos/texterr.jpg", "recursos/texterr2.jpg", "recursos/HMP.jpg", (float)800, (float)800);
 	if (!Terreno){
 		result = false;
 		_RPT1(0, "Alert! Land has not been initialized. \n", 0);
