@@ -389,7 +389,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 20.0f, 20.0f);
 
 	float* matrixGameObject4 = Pistola->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -15.0f);
 
 	float* matrixGameObject5 = MedKit->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 20.0f, -17.0f);
