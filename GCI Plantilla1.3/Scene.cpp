@@ -374,34 +374,34 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixSkydome, 0.0f, 0.0f, 0.0f);*/
 
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 8.0f, 0.0f);
+	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 20.0f, 0.0f);
 
 	float* matrixGameObject = deLorean->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 20.0f, -10.0f);
 
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
 
 	float* matrixGameObject2 = Municion->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 6.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 20.0f, -10.0f);
 
 	float* matrixGameObject3 = Casa->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 6.0f, 20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 20.0f, 20.0f);
 
 	float* matrixGameObject4 = Pistola->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 6.0f, -15.0f);
+	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -20.0f);
 
 	float* matrixGameObject5 = MedKit->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 6.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 20.0f, -17.0f);
 
 	float* matrixGameObject6 = Fogata->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject6, -22.0f, 6.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject6, -22.0f, 20.0f, -17.0f);
 
 	float* matrixGameObject7 = Estanteria->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 6.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 20.0f, -17.0f);
 
 	float* matrixGameObject8 = Tienda->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 6.0f, 20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 20.0f, 20.0f);
 	//Tranformaciones de cajas de colisión
 	float* auxMatrix = new float[16]{ 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
