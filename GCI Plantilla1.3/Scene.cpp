@@ -73,7 +73,7 @@ bool Scene::Initialize() {
 	}
 
 	//Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/heightmap.jpg", "recursos/test.tga", "recursos/Piedras_normal.jpg",(float)400, (float)400, 0, 1);
-	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/HMP.jpg", "recursos/texterr.jpg", "recursos/texterr2.jpg", "recursos/HMP.jpg", (float)800, (float)800);
+	Terreno = new Land(handlerWindow, OpenGL, LoaderTexture, L"recursos/HMP.jpg", "recursos/texterr.jpg", "recursos/texterr2.jpg", "recursos/HMP.jpg", (float)1000, (float)1000);
 	if (!Terreno){
 		result = false;
 		_RPT1(0, "Alert! Land has not been initialized. \n", 0);
@@ -217,7 +217,7 @@ bool Scene::Initialize() {
 		return result;
 	}
 
-	Skydome = new Dome("recursos/sky.jpg", OpenGL, LoaderTexture, 500);
+	Skydome = new Dome("recursos/sky.jpg", OpenGL, LoaderTexture, 800);
 	if (!Skydome) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the Skydome.", "Error", MB_OK);
@@ -481,6 +481,21 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 
+	static bool Activar = false;
+
+	if (input->GetKey(KeyCode.Shift) == true) {
+		speed += speed * .03;
+	}
+	else{ speed = SPEED_CAMERA; }
+
+	/*if (input->GetKey(KeyCode.Shift) ) {
+		if (Activar == true) { Activar = false; }
+		else if (Activar == false) { Activar = true; }
+
+		if (Activar == true) { speed += speed * 1.2; }
+		else if (Activar == false) { speed = SPEED_CAMERA; }
+	}*/
+
 	return result;
 }
 
@@ -541,19 +556,21 @@ bool Scene::ManageCommands() {
 	}
 
 	if (input->GetKey(KeyCode.I)) {
-		DeltaRotation->X -= speedAxisX * deltaTime;
+		if (DeltaRotation->X > -90)
+		DeltaRotation->X -= speedAxisX * deltaTime * 1.5;
 	}
 	if (input->GetKey(KeyCode.K)) {
-		DeltaRotation->X += speedAxisX * deltaTime;
+		if (DeltaRotation->X < 90)
+		DeltaRotation->X += speedAxisX * deltaTime * 1.5;
 	}
 	if (input->GetKey(KeyCode.J)) {
-		DeltaRotation->Y -= speedAxisY * deltaTime;
+		DeltaRotation->Y -= speedAxisY * deltaTime * 1.5;
 	}
 	if (input->GetKey(KeyCode.L)) {
-		DeltaRotation->Y += speedAxisY * deltaTime;
+		DeltaRotation->Y += speedAxisY * deltaTime * 1.5;
 	}
-	
-	
+
+
 	if (input->GetKey(KeyCode.One)) {
 		Bochido->ChangeTexture(0,0);
 	}
