@@ -97,7 +97,13 @@ public:
 
 	void BuildIdentityMatrix(float*);
 	void BuildPerspectiveFovLHMatrix(float*, float, float, float, float);
+
+	void MatrixObjectRotationY(float*, float);
+
 	void MatrixRotationY(float*, float);
+	void MatrixRotationX(float*, float);
+	void MatrixRotationZ(float*, float);
+
 	void MatrixTranslation(float*, float, float, float);
 	void MatrixMultiply(float*, float*, float*);
 	void MatrixScale(float*,float, float, float);

@@ -38,7 +38,6 @@ const float SPEED_CAMERA = 0.01f;
 const float InitialPosition[3] = { 0.0f, 11.0f, -10.0f };
 const float InitialRotation[3] = { 0.0f, 0.0f, 0.0f };
 
-
 using std::vector;
 using namespace std;
 
