@@ -453,6 +453,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
 	// ?????????????? 
 	if (Dlor == true) {
+		if (input->GetKey(KeyCode.Q)) {
+			Dlor = false;
+		}
 		OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
 		OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
 	}
