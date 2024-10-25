@@ -629,6 +629,54 @@ void OpenGLClass::MatrixObjectRotationY(float* matrix, float angle)
 
 	return;
 }
+void OpenGLClass::MatrixObjectRotationX(float* matrix, float angle)
+{
+	matrix[0] = 1.0f;
+	matrix[1] = 0.0f;
+	matrix[2] = 0.0f;
+	matrix[3] = 0.0f;
+
+	matrix[4] = 0.0f;
+	matrix[5] = cosf(angle);
+	matrix[6] = -sinf(angle);
+	matrix[7] = 0.0f;
+
+	matrix[8] = 0.0f;
+	matrix[9] = sinf(angle);
+	matrix[10] = cosf(angle);
+	matrix[11] = 0.0f;
+
+	/*matrix[12] = 0.0f;
+	matrix[13] = 0.0f;
+	matrix[14] = 0.0f;*/
+	matrix[15] = 1.0f;
+
+	return;
+}
+void OpenGLClass::MatrixObjectRotationZ(float* matrix, float angle)
+{
+	matrix[0] = cosf(angle);
+	matrix[1] = -sinf(angle);
+	matrix[2] = 0.0f;
+	matrix[3] = 0.0f;
+
+	matrix[4] = sinf(angle);
+	matrix[5] = cosf(angle);
+	matrix[6] = 0.0f;
+	matrix[7] = 0.0f;
+
+	matrix[8] = 0.0f;
+	matrix[9] = 0.0f;
+	matrix[10] = 1.0f;
+	matrix[11] = 0.0f;
+
+	/*matrix[12] = 0.0f;
+	matrix[13] = 0.0f;
+	matrix[14] = 0.0f;*/
+	matrix[15] = 1.0f;
+
+	return;
+}
 
 void OpenGLClass::MatrixRotationY(float* matrix, float angle)
 {

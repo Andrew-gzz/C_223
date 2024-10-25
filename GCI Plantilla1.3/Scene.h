@@ -120,6 +120,7 @@ private:
 	//Variables de Rotacion
 	float angulo;
 	float angulo_Y;
+	float angulo_Z;
 	float scale;
 	bool Reset;
 

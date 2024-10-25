@@ -99,6 +99,8 @@ public:
 	void BuildPerspectiveFovLHMatrix(float*, float, float, float, float);
 
 	void MatrixObjectRotationY(float*, float);
+	void MatrixObjectRotationX(float*, float);
+	void MatrixObjectRotationZ(float*, float);
 
 	void MatrixRotationY(float*, float);
 	void MatrixRotationX(float*, float);

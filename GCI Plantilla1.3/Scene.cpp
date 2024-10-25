@@ -432,7 +432,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	//Colisión por caja
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		// desactiva la restriccon de movimiento del HitBox
-		// ????????????????
 		if (Dlor == false) {
 			DeltaPosition->X = LastDeltaPosition->X;
 			DeltaPosition->Y = LastDeltaPosition->Y;
@@ -443,22 +442,37 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		}
 		// este if hace que al pegarte al Dlorian y piques a la "E" el modelo estara en la posicion de la camara
 		// pero unicamente se podra mover el modelo del Dlorian en el "hitbox" dodne se cargo el modelo
-		// ?????????????????
 		/*if (Dlor == true) {
 			OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
 			OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
 		}*/
 	}
-
+	
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
-	// ?????????????? 
+	
 	if (Dlor == true) {
+		static float DlorianAltura = 0.0f;
+		// me bajo del carro
 		if (input->GetKey(KeyCode.Q)) {
 			Dlor = false;
+			DlorianAltura = 0.0f;
 		}
+		// aumento la altura ( volando )
+		if (input->GetKey(KeyCode.Space)) {
+			DlorianAltura += 0.1f;
+		}
+		// deciendo
+		if (input->GetKey(KeyCode.Enter)) {
+			DlorianAltura -= 0.1f;
+		}	
+
+		DeltaPosition->Y += DlorianAltura;
 		OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
 		OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
+
 	}
+
+	//OpenGL->MatrixObjectRotationZ(matrixGameObject, angulo);
 
 	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -629,6 +643,8 @@ bool Scene::ManageCommands() {
 	}
 
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
+	angulo < 360 ? angulo += 0.1f : angulo = 0;
+
 	angulo_Y = DeltaRotation->Y;
 
 	DeltaPosition->Y = Terreno->Superficie(DeltaPosition->X, DeltaPosition->Z) + 2;
