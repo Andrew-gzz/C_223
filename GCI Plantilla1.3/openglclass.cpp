@@ -824,3 +824,25 @@ void OpenGLClass::MatrixScale(float*matrix, float sx, float sy, float sz) {
 	matrix[14] = 0.0f;
 	matrix[15] = 1.0f;
 }
+
+void OpenGLClass::MatrixObjectScale(float* matrix, float sx, float sy, float sz) {
+	matrix[0] = sx;
+	matrix[1] = 0.0f;
+	matrix[2] = 0.0f;
+	matrix[3] = 0.0f;
+
+	matrix[4] = 0.0f;
+	matrix[5] = sy;
+	matrix[6] = 0.0f;
+	matrix[7] = 0.0f;
+
+	matrix[8] = 0.0f;
+	matrix[9] = 0.0f;
+	matrix[10] = sz;
+	matrix[11] = 0.0f;
+
+	/*matrix[12] = 0.0f;
+	matrix[13] = 0.0f;
+	matrix[14] = 0.0f;*/
+	matrix[15] = 1.0f;
+}

@@ -109,6 +109,7 @@ public:
 	void MatrixTranslation(float*, float, float, float);
 	void MatrixMultiply(float*, float*, float*);
 	void MatrixScale(float*,float, float, float);
+	void MatrixObjectScale(float*, float, float, float);
 
 private:
 	bool LoadExtensionList();

@@ -147,6 +147,18 @@
     <ClInclude Include="ShaderBillboard.h">
       <Filter>Archivos de Encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\INICIO\INICIO\Objetos.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\INICIO\INICIO\Inventario.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\INICIO\INICIO\Armas.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\INICIO\INICIO\Jugador.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\color.ps">

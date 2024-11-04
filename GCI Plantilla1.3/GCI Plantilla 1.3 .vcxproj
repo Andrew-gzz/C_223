@@ -150,6 +150,10 @@
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\INICIO\INICIO\Armas.h" />
+    <ClInclude Include="..\..\INICIO\INICIO\Inventario.h" />
+    <ClInclude Include="..\..\INICIO\INICIO\Jugador.h" />
+    <ClInclude Include="..\..\INICIO\INICIO\Objetos.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BoundingBoxRenderer.h" />
