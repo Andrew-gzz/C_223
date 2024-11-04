@@ -359,6 +359,8 @@ bool Scene::Render() {
 }
 
 bool Scene::Update(InputClass* input, float deltaTime) {
+	GAMEPAD_0;
+
 	bool result = true;
 
 	this->input = input;
@@ -441,6 +443,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (input->GetKey(KeyCode.E)) {
 			Dlor = true; 
 		}
+		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+			Dlor = true;
+		}
 		// este if hace que al pegarte al Dlorian y piques a la "E" el modelo estara en la posicion de la camara
 		// pero unicamente se podra mover el modelo del Dlorian en el "hitbox" dodne se cargo el modelo
 		/*if (Dlor == true) {
@@ -458,15 +463,24 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			Dlor = false;
 			DlorianAltura = 0.0f;
 		}
+		if (input->GetKeyXbox(KeyCode.XBOX_B)) {
+			Dlor = false;
+			DlorianAltura = 0.0f;
+		}
 		// aumento la altura ( volando )
 		if (input->GetKey(KeyCode.Space)) {
+			DlorianAltura += 0.1f;
+		}
+		if (input->GetKeyXbox(KeyCode.LT)) {
 			DlorianAltura += 0.1f;
 		}
 		// deciendo
 		if (input->GetKey(KeyCode.Enter)) {
 			DlorianAltura -= 0.1f;
 		}	
-
+		if (input->GetKeyXbox(KeyCode.RT)) {
+			DlorianAltura -= 0.1f;
+		}
 		DeltaPosition->Y += DlorianAltura;
 		OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
 		OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
@@ -541,6 +555,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 }
 
 bool Scene::ManageCommands() {
+	GAMEPAD_0;
+
 	bool result = true;
 	
 	//Guardar la posición de la Cámara antes de actualizarla
@@ -577,7 +593,8 @@ bool Scene::ManageCommands() {
 		_RPT1(0, "AxisX: %f , Angle * PI / 180(AccelFront): %f  \n", input->GetLeftAxisX(), vrTXZ[0]);
 		vrTXZ[1] = (speedTAxisX * deltaTime) * cosf((DeltaRotation->Y * M_PI) / 180);
 		vrTXZ[1] = vrTXZ[1] * input->GetLefttAxisY();
-		_RPT1(0, "AxisY: %f , Angle * PI / 180(AccelSides): %f  \n", input->GetLefttAxisY(), vrTXZ[1]);
+		_RPT1(0, "AxisY: %f , Angle * PI / 180(AccelSides): %f  \n", input->GetLefttAxisY(), vrTXZ[1]);		
+
 	}
 
 	if (input->GetLeftAxisX() > 0.1 || input->GetLeftAxisX() < -0.1) {
