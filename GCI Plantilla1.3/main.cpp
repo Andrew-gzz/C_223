@@ -1,5 +1,6 @@
 ﻿#include <windows.h>
 #include <windowsx.h>
+#include <random>
 #include "openglclass.h"
 #include "GameLogic.h"
 #include "inputclass.h"
@@ -26,7 +27,7 @@ struct Musica
 	string Dir;
 	string Nombre;
 };
-Musica Cancion[3];
+Musica Cancion[4];
 ZPlay* player = CreateZPlay();//Generamos un objeto puntero para nuestro reproductor
 int LVolume = 25, RVolume = 25;
 TStreamStatus status;
@@ -35,25 +36,40 @@ void ReproductorPausa();
 void ReproductorReproduce();
 void ReproductorInicializaYReproduce();
 void ReproductorCambiarCancionYReproduce(int);
+
+random_device rd;
+mt19937 gen(rd());
+uniform_int_distribution<> distrib(0, 3);
+// aca genera un numero random del 0 al 3
+static int indexCancion = distrib(gen);
+
 void ReproductorInicializaYReproduce() {
 	Cancion[0].Nombre = "Inicio 1";
-	Cancion[0].Dir = "recursos/Kirby.mp3";
-	Cancion[1].Nombre = "Inicio 1";
-	Cancion[1].Dir = "recursos/GuildHall.mp3";
-	Cancion[2].Nombre = "Inicio 2";
-	Cancion[2].Dir = "recursos/Mario.mp3";
-	Cancion[3].Nombre = "Inicio 3";
-	Cancion[3].Dir = "recursos/";
-	int indexCancion = 0;
+	Cancion[0].Dir = "recursos/SoundTrack/Moog_City.mp3";
+	Cancion[1].Nombre = "Inicio 2";
+	Cancion[1].Dir = "recursos/SoundTrack/Aria_Math.mp3";
+	Cancion[2].Nombre = "Inicio 3";
+	Cancion[2].Dir = "recursos/SoundTrack/DKC__Aquatic_Ambience.mp3";
+	Cancion[3].Nombre = "Inicio 4";
+	Cancion[3].Dir = "recursos/SoundTrack/Wait.mp3";
+
+	//random_device rd;
+	//mt19937 gen(rd());
+	//uniform_int_distribution<> distrib(0, 3);
+	//// aca genera un numero random del 0 al 3
+	//int indexCancion = distrib(gen);
+
 	ifstream inputFile(Cancion[indexCancion].Dir.c_str());
 
 	if (!inputFile.good()) {
 		MessageBoxA(NULL, "No file found", "No file found", MB_ICONERROR);
 		return;
 	}
-	else
+	else {
 		player->OpenFile(Cancion[indexCancion].Dir.c_str(), sfAutodetect);
-	player->SetMasterVolume(LVolume, RVolume);// Sonido tipo estereo Left and Right - Volumen de 0 - 100
+	}
+
+	player->SetMasterVolume(LVolume, RVolume);// Sonido tipo estereo Left and Right - Volumen de 0 - 100	
 	//player->Play();
 }
 
@@ -274,8 +290,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	// Loop until there is a quit message from the window or the user.
 	done = false;
+
+	TStreamStatus status;
+
 	while (!done)
 	{
+		player->GetStatus(&status);
+		static bool T = false;
+
+		if (status.fPlay == 0 && T == false) {
+			//MessageBoxA(NULL, "Inicia Reproduccion.", "musica", MB_ICONINFORMATION);
+			T = true;
+		}
+		else if (status.fPlay == 0 && T == true) {
+			//MessageBoxA(NULL, "Termino la Reproduccion.", "musica", MB_ICONINFORMATION);
+			random_device rd;
+			mt19937 gen(rd());
+			uniform_int_distribution<> distrib(0, 3);
+
+			indexCancion = distrib(gen);
+
+			ReproductorCambiarCancionYReproduce(indexCancion);
+
+			T = false;
+		}
 		// Handle the windows messages.
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
@@ -288,7 +326,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 			done = true;
 		}
 		else
-		{
+		{	
 			bool result;
 			m_Timer->UpdateByFrame();
 			timer += m_Timer->GetTime();

@@ -122,6 +122,9 @@ private:
 	float angulo_Y;
 	float angulo_Z;
 	float scale;
+	float RObjX;
+	float RObjY;
+	float RObjZ;
 	bool Reset;
 
 	//Variables de representacion (Color)

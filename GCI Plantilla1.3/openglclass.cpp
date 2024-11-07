@@ -571,9 +571,9 @@ void OpenGLClass::BuildIdentityMatrix(float* matrix)
 	matrix[10] = 1.0f;
 	matrix[11] = 0.0f;
 
-	matrix[12] = 0.0f;
+	/*matrix[12] = 0.0f;
 	matrix[13] = 0.0f;
-	matrix[14] = 0.0f;
+	matrix[14] = 0.0f;*/
 	matrix[15] = 1.0f;
 
 	return;
@@ -607,6 +607,8 @@ void OpenGLClass::BuildPerspectiveFovLHMatrix(float* matrix, float fieldOfView, 
 
 void OpenGLClass::MatrixObjectRotationY(float* matrix, float angle)
 {
+	//BuildObjIdentityMatrix(matrix);
+
 	matrix[0] = cosf(angle);
 	matrix[1] = 0.0f;
 	matrix[2] = -sinf(angle);
@@ -631,6 +633,8 @@ void OpenGLClass::MatrixObjectRotationY(float* matrix, float angle)
 }
 void OpenGLClass::MatrixObjectRotationX(float* matrix, float angle)
 {
+	//BuildObjIdentityMatrix(matrix);
+
 	matrix[0] = 1.0f;
 	matrix[1] = 0.0f;
 	matrix[2] = 0.0f;
@@ -655,6 +659,8 @@ void OpenGLClass::MatrixObjectRotationX(float* matrix, float angle)
 }
 void OpenGLClass::MatrixObjectRotationZ(float* matrix, float angle)
 {
+	//BuildObjIdentityMatrix(matrix);
+
 	matrix[0] = cosf(angle);
 	matrix[1] = -sinf(angle);
 	matrix[2] = 0.0f;
@@ -676,6 +682,53 @@ void OpenGLClass::MatrixObjectRotationZ(float* matrix, float angle)
 	matrix[15] = 1.0f;
 
 	return;
+}
+void OpenGLClass::MatrixObjRotationMultiple(float* matriz, float anglX, float anglY, float anglZ) {
+
+	// hay que trabajar en esto más tarde, cuando lo necesitemos
+
+	float MatrixX[16];
+	float MatrixY[16];
+	float MatrixZ[16];
+
+	MatrixObjectRotationX(MatrixX, anglX);
+	MatrixObjectRotationY(MatrixY, anglY);
+	MatrixObjectRotationZ(MatrixZ, anglZ);
+
+	float MatrixTot[16];
+	//BuildObjIdentityMatrix(MatrixTot);
+
+	//MatrixMultiply(matriz, matriz, MatrixTot);
+
+
+	MatrixMultiply(MatrixTot, MatrixX, MatrixTot);
+	MatrixMultiply(MatrixTot, MatrixY, MatrixTot);
+	MatrixMultiply(MatrixTot, MatrixZ, MatrixTot);
+
+	MatrixMultiply(matriz, MatrixTot, matriz);
+
+	return;
+}
+
+void OpenGLClass::MatrixObjMultiplicada(const float a[16], const float b[16], float result[16]) {
+	for (int row = 0; row < 4; ++row) {
+		for (int col = 0; col < 4; ++col) {
+			result[row * 4 + col] = 0;
+			for (int k = 0; k < 4; ++k) {
+				result[row * 4 + col] += a[row * 4 + k] * b[k * 4 + col];
+			}
+		}
+	}
+	return;
+}
+
+void OpenGLClass::BuildObjIdentityMatrix(float* matrix) {
+
+	for (int i = 0; i < 16; ++i) {
+		matrix[i] = (i % 5 == 0) ? 1.0f : 0.0f; // Elementos diagonales a 1, el resto a 0
+	}
+	return;
+
 }
 
 void OpenGLClass::MatrixRotationY(float* matrix, float angle)

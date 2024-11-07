@@ -18,6 +18,9 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	speed = 0.0f;
 	angulo = 0.0f;
 	angulo_Y = 0.0f;
+	RObjX = 0.0f;
+	RObjY = 0.0f;
+	RObjZ = 0.0f;
 	deLorean = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
@@ -33,6 +36,9 @@ bool Scene::Initialize() {
 
 	angulo = 0.0f;
 	angulo_Y = 0.0f;
+	RObjX = 0.0f;
+	RObjY = 0.0f;
+	RObjZ = 0.0f;
 	speedAxisX = SPEED_AXIS_X;
 	speedAxisY = SPEED_AXIS_Y;
 	speedTAxisX = SPEEDT_AXIS_X;
@@ -380,7 +386,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	float* matrixGameObject = deLorean->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 20.0f, -10.0f);
+	///////////////////////////////////////////////////////////////////
+	
+	//OpenGL->MatrixObjectRotationY(matrixGameObject, RObjY); // este si jala, solo lo tengo para provar cosas.
+	//OpenGL->MatrixObjRotationMultiple(matrixGameObject, 0.0f, RObjY, 0.0f); // esto noe sta funcionando, despues lo arreglamos.
 
+	/////////////////////////////////////////////////////
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
 
@@ -390,7 +401,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixGameObject3 = Casa->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 20.0f, 20.0f);
 	
-	float* matrixGameObject4 = Pistola->GetWorldMatrix();
+	float* matrixGameObject4 = Pistola->GetWorldMatrix(); // Pistolita
 	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -15.0f);
 	OpenGL->MatrixObjectScale(matrixGameObject4, 8, 8, 8);
 
@@ -455,7 +466,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}
 	
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
-	
 	if (Dlor == true) {
 		static float DlorianAltura = 0.0f;
 		// me bajo del carro
@@ -487,7 +497,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	}
 
-	//OpenGL->MatrixObjectRotationZ(matrixGameObject, angulo);
 
 	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -661,6 +670,10 @@ bool Scene::ManageCommands() {
 	}
 
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
+	RObjX < 360 ? RObjX += 0.1f : RObjX = 0;
+	RObjY < 360 ? RObjY += 0.1f : RObjY = 0;
+	RObjZ < 360 ? RObjZ += 0.1f : RObjZ = 0;
+
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
 
 	angulo_Y = DeltaRotation->Y;

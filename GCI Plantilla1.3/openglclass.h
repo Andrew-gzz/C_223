@@ -102,6 +102,11 @@ public:
 	void MatrixObjectRotationX(float*, float);
 	void MatrixObjectRotationZ(float*, float);
 
+	void MatrixObjRotationMultiple(float* matriz, float anglX,float anglY,float anglZ);
+	void MatrixObjMultiplicada(const float a[16], const float b[16], float result[16]);
+
+	void BuildObjIdentityMatrix(float* matrix);
+
 	void MatrixRotationY(float*, float);
 	void MatrixRotationX(float*, float);
 	void MatrixRotationZ(float*, float);
