@@ -25,7 +25,8 @@
 #include "Billboard.h"
 #include "ShaderBillboard.h"
 
-
+#include "Jugador.h"
+#include "Armas.h"
 
 // GLOBALS //
 const bool FULL_SCREEN = false;
@@ -119,7 +120,10 @@ private:
 	Billboard* PovDlorian;
 	Billboard* Man;
 	
-	//color
+	//Gameplay
+	Jugador* Player1;
+	Armas* melee;
+	Armas* Guns;	
 
 	//Variables de Movimiento (Traslacion)
 	float speedAxisX;

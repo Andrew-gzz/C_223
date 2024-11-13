@@ -144,17 +144,17 @@ bool Dome::Redraw() {
 	m_vertexCount = slices * slides * 3;
 	m_indexCount = (slices) * (slides) * 6;
 
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_vertexCount]; 
 	if (!vertices)
 		return false;
-	indices = new unsigned int[m_indexCount];
+	indices = new unsigned int[m_indexCount]; 
 	if (!indices)
 		return false;
 	
 	ConstructDome();
 
-	OpenGL->glGenVertexArrays(1, &m_vertexArrayId);
-	OpenGL->glBindVertexArray(m_vertexArrayId);
+	OpenGL->glGenVertexArrays(1, &m_vertexArrayId); 
+	OpenGL->glBindVertexArray(m_vertexArrayId); 
 
 	OpenGL->glGenBuffers(1, &m_vertexBufferId);
 	OpenGL->glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferId);
@@ -186,6 +186,10 @@ bool Dome::Redraw() {
 	indices = 0;
 
 	return true;
+}
+
+void Dome::ChancheTexture(string pathTexture) {
+	this->pathTexture = pathTexture;
 }
 
 bool Dome::Initialize()
@@ -303,10 +307,10 @@ void Dome::Shutdown()
 	return;
 }
 
-bool Dome::Interpolar1() {
-	ColorAnterior[0] = 255.00f;
-	ColorAnterior[1] = 255.00f;
-	ColorAnterior[2] = 255.00f;
+bool Dome::Tarde() {
+	ColorAnterior[0] = 250.00f;
+	ColorAnterior[1] = 250.00f;
+	ColorAnterior[2] = 250.00f;
 	ColorTarget[0] = 255.00f;
 	ColorTarget[1] = 165.00f;
 	ColorTarget[2] = 1.00f;
@@ -331,10 +335,10 @@ bool Dome::Interpolar1() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		// Codigo de color naranja en RG (255,165,0,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (10.00f / 255.00f),
-		//	this->coeficienteDeCambio * (10.00f / 165.00f),
-		//	this->coeficienteDeCambio * (10.00f / 1.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		/*this->RedefineColor(this->coeficienteDeCambio * (10.00f / 255.00f),
+			this->coeficienteDeCambio * (10.00f / 165.00f),
+			this->coeficienteDeCambio * (10.00f / 1.00f),
+			this->coeficienteDeCambio * 10.00f);*/
 		Redraw();
 		return false;
 	}
@@ -361,13 +365,13 @@ bool Dome::Interpolar1() {
 	}
 }
 
-bool Dome::Interpolar2() {
+bool Dome::Noche() {
 	ColorAnterior[0] = 255.00f;
 	ColorAnterior[1] = 165.00f;
 	ColorAnterior[2] = 1.00f;
-	ColorTarget[0] = 60.00f;
-	ColorTarget[1] = 60.00f;
-	ColorTarget[2] = 60.00f;
+	ColorTarget[0] = 1.00f;
+	ColorTarget[1] = 1.00f;
+	ColorTarget[2] = 1.00f;
 	if (elapsedTime <= cicloLuz) {
 		float* nuevoColor = new float[4] {
 			colorDomo[0] - ((((ColorAnterior[0] / 255.00f) - (ColorTarget[0] / 255.00f)) * 255) / cicloLuz) / 255,
@@ -380,10 +384,10 @@ bool Dome::Interpolar2() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		//// Codigo de color negro deseado en RG (60,60,60,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (10.00f /60.00f),
-		//	this->coeficienteDeCambio * (10.00f / 60.00f),
-		//	this->coeficienteDeCambio * (10.00f / 60.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		/*this->RedefineColor(this->coeficienteDeCambio * (10.00f /1.00f),
+			this->coeficienteDeCambio * (10.00f / 1.00f),
+			this->coeficienteDeCambio * (10.00f / 1.00f),
+			this->coeficienteDeCambio * 10.00f);*/
 		Redraw();
 		return false;
 	}
@@ -407,10 +411,10 @@ bool Dome::Interpolar2() {
 	}
 }
 
-bool Dome::Interpolar3() {
-	ColorAnterior[0] = 60.00f;
-	ColorAnterior[1] = 60.00f;
-	ColorAnterior[2] = 60.00f;
+bool Dome::Amanecer() {
+	ColorAnterior[0] = 1.00f;
+	ColorAnterior[1] = 1.00f;
+	ColorAnterior[2] = 1.00f;
 	ColorTarget[0] = 250.00f;
 	ColorTarget[1] = 250.00f;
 	ColorTarget[2] = 250.00f;
@@ -426,10 +430,10 @@ bool Dome::Interpolar3() {
 			nuevoColor[2],
 			nuevoColor[3]);
 		//// Codigo de color blanco deseado en RG (230,230,230,1)
-		//this->RedefineColor(this->coeficienteDeCambio * (1.00f / 230.00f),
-		//	this->coeficienteDeCambio * (10.00f / 230.00f),
-		//	this->coeficienteDeCambio * (10.00f / 230.00f),
-		//	this->coeficienteDeCambio * 10.00f);
+		/*this->RedefineColor(this->coeficienteDeCambio * (1.00f / 230.00f),
+			this->coeficienteDeCambio * (10.00f / 230.00f),
+			this->coeficienteDeCambio * (10.00f / 230.00f),
+			this->coeficienteDeCambio * 10.00f);*/
 		Redraw();
 		return false;
 	}
@@ -456,13 +460,13 @@ bool Dome::Interpolar3() {
 void Dome::CicloInterpolaciones() {
 	colorDomo = this->GetDeltaColor();
 	if (interpolacionAmanecerTarde == true) {
-		Interpolar1();
+		Tarde(); 
 	}
 	else if (interpolacionTardeNoche == true) {
-		Interpolar2();
+		Noche(); 
 	}
 	else if (interpolacionNocheAmanecer == true) {
-		Interpolar3();
+		Amanecer();
 	}
 	elapsedTime++;
 }

@@ -150,10 +150,7 @@
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\INICIO\INICIO\Armas.h" />
-    <ClInclude Include="..\..\INICIO\INICIO\Inventario.h" />
-    <ClInclude Include="..\..\INICIO\INICIO\Jugador.h" />
-    <ClInclude Include="..\..\INICIO\INICIO\Objetos.h" />
+    <ClInclude Include="Armas.h" />
     <ClInclude Include="Audios.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BoundingBox.h" />
@@ -169,11 +166,14 @@
     <ClInclude Include="Geometrias.h" />
     <ClInclude Include="Imagenes.h" />
     <ClInclude Include="inputclass.h" />
+    <ClInclude Include="Inventario.h" />
+    <ClInclude Include="Jugador.h" />
     <ClInclude Include="KeyCode.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="musica\libzplay.h" />
+    <ClInclude Include="Objetos.h" />
     <ClInclude Include="openglclass.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

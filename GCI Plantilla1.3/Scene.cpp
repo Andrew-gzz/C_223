@@ -28,6 +28,9 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	RObjZ = 0.0f;
 	deLorean = 0;
 	noticias = 0;
+	Player1 = 0;
+	melee = 0;
+	Guns = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
 
@@ -66,6 +69,30 @@ bool Scene::Initialize() {
 		Camera->SetPosition(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z);
 		Camera->SetRotation(DeltaRotation->X, DeltaRotation->Y, DeltaRotation->Z);
 		// Con esto podriamos aislar siempre el punto de partida inicial de la escena para evitar teletrasportarse sin querer.
+	}
+
+	Player1 = new Jugador(Camera->GetPositionX(), Camera->GetPositionY(), Camera->GetPositionZ(), 100, 10);
+	if (!Player1) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
+		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
+		return result;
+	}
+
+	melee = new Armas("Melee");
+	if (!melee) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
+		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
+		return result;
+	}
+
+	Guns = new Armas("Pistola");
+	if (!Guns) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
+		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
+		return result;
 	}
 
 	LightShader = new LightShaderClass(OpenGL, handlerWindow, "shaders/terrain.vs", "shaders/terrain.ps");
@@ -248,7 +275,7 @@ bool Scene::Initialize() {
 		return result;
 	}
 
-	Skydome = new Dome("recursos/sky.jpg", OpenGL, LoaderTexture, 800);
+	Skydome = new Dome("recursos/Skydome/Skye.jpg", OpenGL, LoaderTexture, 800);
 	if (!Skydome) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the Skydome.", "Error", MB_OK);
@@ -399,7 +426,6 @@ bool Scene::Render() {
 	OpenGL->GetProjectionMatrix(projectionMatrix);
 
 	// Renderizamos el Skydome
-	//Skydome->CicloInterpolaciones();
 	Skydome->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos terreno
@@ -492,6 +518,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	/*float* matrixSkydome = Skydome->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixSkydome, 0.0f, 0.0f, 0.0f);*/
+	Player1->setPosX(Camera->GetPositionX());
+	Player1->setPosY(Camera->GetPositionY());
+	Player1->setPosZ(Camera->GetPositionZ());
 
 
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
@@ -610,11 +639,20 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	}
 
+	static int NUM = 0;
 
+	if (NUM >= 6) {
+		MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+	}
 	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // agarra la municion
+			Player1->setObjInventario("Municion", NUM);
+			Guns->setCargas(Guns->getCargas() + 1);
+			NUM++;
+		}
 	}
 	if (Casa->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -625,16 +663,29 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // agarra el arma
+			Guns->setArm("Pistola");
+			Guns->setMunicion(15);
+			Player1->setObjInvt(Guns->getArma(), NUM); 
+			Player1->setDamage(Player1->getDaño() * 1.5);			 
+			NUM++; 
+		}
 	}
 	if (MedKit->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // agarra el kit
+			Player1->setVida(Player1->getVida() + 15);
+		}
 	}
 	if (Fogata->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // sepa que quieras hacer aqui xd
+			
+		}
 	}
 	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -655,6 +706,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 		if (input->GetKey(KeyCode.E)) { // lee noticias
+			// aqui se intento hacer qeu suene un audio, pero no se logro por que no se puede llamar el 
+			// objeto al main, y fue un pedo hacer qeu funcione junto con la musica de fondo
 		}
 	}
 	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -808,14 +861,23 @@ bool Scene::ManageCommands() {
 	}
 
 	if (input->GetKey(KeyCode.P)) {
-		string Cadena = "Posicion: " + to_string(Camera->GetPositionX()) + " , " + to_string(Camera->GetPositionY()) + " , " + to_string(Camera->GetPositionZ());
+		string Cadena = "Camara Posicion: " + to_string(Camera->GetPositionX()) + " , " + to_string(Camera->GetPositionY()) + " , " + to_string(Camera->GetPositionZ());
+		MessageBoxA(handlerWindow, Cadena.c_str(), "Coordenadas", MB_OK);
+	}
+	if (input->GetKey(KeyCode.O)) {
+		string Cadena = "Jugador Posicion: " + to_string(Player1->getPosicionX()) + " , " + to_string(Player1->getPosicionY()) + " , " + to_string(Player1->getPosicionZ());
 		MessageBoxA(handlerWindow, Cadena.c_str(), "Coordenadas", MB_OK);
 	}
 
 	//Skydome->transicion(dna, colorDia, colorAnochecer, 3000);
-	Skydome->CicloInterpolaciones();
+	Skydome->CicloInterpolaciones(); // comentar o descomentar para las interpolaciones
 	//Skydome->RedefineColor(0, 0, 0, 0);
 	Skydome->Redraw();
+
+	if (input->GetKey(KeyCode.One)) {
+		//Skydome->RedefineColor(0, 0, 0, 250);
+		//Skydome->Redraw();
+	}
 
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
 	RObjX < 360 ? RObjX += 0.1f : RObjX = 0;

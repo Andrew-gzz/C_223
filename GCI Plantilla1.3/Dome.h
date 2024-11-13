@@ -96,13 +96,15 @@ public:
 	float ColorAnterior[3] = { 0.0f, 0.0f, 0.0f };
 	float ColorTarget[3] = { 0.0f, 0.0f, 0.0f };
 
-	bool Interpolar1();
-	bool Interpolar2();
-	bool Interpolar3();
+	bool Tarde();
+	bool Noche();
+	bool Amanecer();
 
 	void CicloInterpolaciones();
 
 	bool Render(float* viewMatrix, float* projectionMatrix);
+
+	void ChancheTexture(string);
 
 	bool Initialize();
 	void Update();
