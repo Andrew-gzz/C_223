@@ -159,6 +159,12 @@
     <ClInclude Include="..\..\INICIO\INICIO\Jugador.h">
       <Filter>Archivos de Encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="ChancheColor.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Audios.h">
+      <Filter>Archivos de Encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\color.ps">

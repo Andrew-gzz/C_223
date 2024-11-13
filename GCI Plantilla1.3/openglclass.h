@@ -105,6 +105,11 @@ public:
 	void MatrixObjRotationMultiple(float* matriz, float anglX,float anglY,float anglZ);
 	void MatrixObjMultiplicada(const float a[16], const float b[16], float result[16]);
 
+	// se agregaron funciones para obtener la posicion del Objeto 
+	float getMatrixPosX(float*);// (1)
+	float getMatrixPosY(float*);// (2)
+	float getMatrixPosZ(float*);// (3)
+
 	void BuildObjIdentityMatrix(float* matrix);
 
 	void MatrixRotationY(float*, float);

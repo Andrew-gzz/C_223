@@ -579,6 +579,15 @@ void OpenGLClass::BuildIdentityMatrix(float* matrix)
 	return;
 }
 
+float OpenGLClass::getMatrixPosX(float* matrix) {
+	return matrix[12];
+}
+float OpenGLClass::getMatrixPosY(float* matrix) {
+	return matrix[13];
+}
+float OpenGLClass::getMatrixPosZ(float* matrix) {
+	return matrix[14];
+}
 
 void OpenGLClass::BuildPerspectiveFovLHMatrix(float* matrix, float fieldOfView, float screenAspect, float screenNear, float screenDepth)
 {

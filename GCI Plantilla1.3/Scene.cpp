@@ -1,6 +1,11 @@
 #include "Scene.h"
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 using namespace std;
+
+bool animation = false;
 
 Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	handlerWindow = hwnd;
@@ -22,6 +27,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	RObjY = 0.0f;
 	RObjZ = 0.0f;
 	deLorean = 0;
+	noticias = 0;
 	LoaderTexture = new TextureClass(OpenGL);
 }
 
@@ -194,6 +200,25 @@ bool Scene::Initialize() {
 		}
 		Tienda->SetShaders(ShaderModel, ShaderBounding);
 	}
+
+	noticias = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/News/Noticias.obj",
+		"recursos/Modelos/News/Noticia.png");
+	if (!noticias) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = noticias->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		noticias->SetShaders(ShaderModel, ShaderBounding);
+	}
 /*
 
 	if (!Municion) {
@@ -287,6 +312,66 @@ bool Scene::Initialize() {
 		arbol2D->SetShader(ShaderBill);
 	}
 
+	arbol = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/tree2.png");
+	if (!arbol) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		arbol->Initialize(5.0f);
+		arbol->SetShader(ShaderBill);
+	}
+
+	hierba = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/hierba.png");
+	if (!hierba) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		hierba->Initialize(1.0f);
+		hierba->SetShader(ShaderBill);
+	}
+
+	Arbusto = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Arbusto.png");
+	if (!Arbusto) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		Arbusto->Initialize(1.0f);
+		Arbusto->SetShader(ShaderBill);
+	}
+
+	PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
+	if (!PovDlorian) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		PovDlorian->Initialize(4.0f);
+		PovDlorian->SetShader(ShaderBill);
+	}
+
+	Man = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Sprites/Man_96x96.png");
+	if (!Man) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		Man->Initialize2(1.0f, 0.0f, 0.5f); 
+		Man->SetShader(ShaderBill);
+	}
+
 	return result;
 }
 
@@ -333,6 +418,7 @@ bool Scene::Render() {
 	Fogata->Render(viewMatrix, projectionMatrix, true);
 	Estanteria->Render(viewMatrix, projectionMatrix, true);
 	Tienda->Render(viewMatrix, projectionMatrix, true);
+	noticias->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);
@@ -342,7 +428,11 @@ bool Scene::Render() {
 		0.0f, Terreno->Superficie(0.0f, 0.0f), 0.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
-	arbol2D->Render(viewMatrix, projectionMatrix, 
+	Arbusto->Render(viewMatrix, projectionMatrix,
+		0.1f, Terreno->Superficie(0.1f, -0.1f), -0.1f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	/*arbol2D->Render(viewMatrix, projectionMatrix, 
 		-10.0f, Terreno->Superficie(-10.0f, -10.0f), -10.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
 
@@ -356,7 +446,29 @@ bool Scene::Render() {
 
 	arbol2D->Render(viewMatrix, projectionMatrix, 
 		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f, 
+		DeltaPosition->X, DeltaPosition->Z);*/
+
+	arbol->Render(viewMatrix, projectionMatrix,
+		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f,
 		DeltaPosition->X, DeltaPosition->Z);
+
+	hierba->Render(viewMatrix, projectionMatrix,
+		2.0f, Terreno->Superficie(2.0f, -2.0f), -2.0f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	Arbusto->Render(viewMatrix, projectionMatrix,
+		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	//////////////////////////////////////////////////////
+
+	/*PovDlorian->Render(viewMatrix, projectionMatrix,
+		10.0f, Terreno->Superficie(20.0f, -20.0f), -10.0f,
+		DeltaPosition->X, DeltaPosition->Z);*/
+
+	//////////////////////////////////////////////////////
+
+	Man->Render(viewMatrix, projectionMatrix, -81.0f, Terreno->Superficie(-81.0f, 60.0f), 60.0f, DeltaPosition->X, DeltaPosition->Z);
 
 	// Damos la instruccion de que termino la escena para que nos muestre frame a frame.
 	OpenGL->EndScene();
@@ -381,13 +493,14 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/*float* matrixSkydome = Skydome->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixSkydome, 0.0f, 0.0f, 0.0f);*/
 
+
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 20.0f, 0.0f);
 
 	float* matrixGameObject = deLorean->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 20.0f, -10.0f);
 	///////////////////////////////////////////////////////////////////
-	
+
 	//OpenGL->MatrixObjectRotationY(matrixGameObject, RObjY); // este si jala, solo lo tengo para provar cosas.
 	//OpenGL->MatrixObjRotationMultiple(matrixGameObject, 0.0f, RObjY, 0.0f); // esto noe sta funcionando, despues lo arreglamos.
 
@@ -400,7 +513,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	float* matrixGameObject3 = Casa->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 20.0f, 20.0f);
-	
+
 	float* matrixGameObject4 = Pistola->GetWorldMatrix(); // Pistolita
 	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -15.0f);
 	OpenGL->MatrixObjectScale(matrixGameObject4, 8, 8, 8);
@@ -416,8 +529,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	float* matrixGameObject8 = Tienda->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 20.0f, 20.0f);
+
+	float* matrixNoticias = noticias->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 20.0f, 62.0f);
+
 	//Tranformaciones de cajas de colisión
-	float* auxMatrix = new float[16]{ 0.0f };
+	float* auxMatrix = new float[16] { 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
 
 	float* matrixBox = box->GetWorldMatrix();
@@ -432,17 +549,13 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixScale(auxMatrix, 0.3f, 1.0f, 1.0f);
 	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);
 
+
 	//Colisión por esfera
 	/*if (deLorean->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
-	// rotacion del skydome
-
-	/*Skydome->MatrixRotationY(matrixSkydome, angulo_Y);*/
-
 	static bool Dlor = false;
-
 	//Colisión por caja
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		// desactiva la restriccon de movimiento del HitBox
@@ -452,7 +565,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			DeltaPosition->Z = LastDeltaPosition->Z;
 		}
 		if (input->GetKey(KeyCode.E)) {
-			Dlor = true; 
+			Dlor = true;
 		}
 		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
 			Dlor = true;
@@ -464,7 +577,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
 		}*/
 	}
-	
+
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
 	if (Dlor == true) {
 		static float DlorianAltura = 0.0f;
@@ -487,7 +600,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		// deciendo
 		if (input->GetKey(KeyCode.Enter)) {
 			DlorianAltura -= 0.1f;
-		}	
+		}
 		if (input->GetKeyXbox(KeyCode.RT)) {
 			DlorianAltura -= 0.1f;
 		}
@@ -532,6 +645,17 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // entrar a la tienda
+
+		}
+	}
+	if (noticias->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z))
+	{
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // lee noticias
+		}
 	}
 	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -544,6 +668,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
+	
 
 	static bool Activar = false;
 
@@ -559,8 +684,21 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (Activar == true) { speed += speed * 1.2; }
 		else if (Activar == false) { speed = SPEED_CAMERA; }
 	}*/
+
 	
 	return result;
+}
+
+int Scene::ActivateAudio() {
+	if (noticias->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z))
+	{
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // lee noticias
+			return 4;
+		}
+	}
 }
 
 bool Scene::ManageCommands() {
@@ -668,6 +806,16 @@ bool Scene::ManageCommands() {
 	if (input->GetKey(KeyCode.Zero)) {
 		Bochido->ChangeTexture(9, 9);
 	}
+
+	if (input->GetKey(KeyCode.P)) {
+		string Cadena = "Posicion: " + to_string(Camera->GetPositionX()) + " , " + to_string(Camera->GetPositionY()) + " , " + to_string(Camera->GetPositionZ());
+		MessageBoxA(handlerWindow, Cadena.c_str(), "Coordenadas", MB_OK);
+	}
+
+	//Skydome->transicion(dna, colorDia, colorAnochecer, 3000);
+	Skydome->CicloInterpolaciones();
+	//Skydome->RedefineColor(0, 0, 0, 0);
+	Skydome->Redraw();
 
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
 	RObjX < 360 ? RObjX += 0.1f : RObjX = 0;

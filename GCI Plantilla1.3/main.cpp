@@ -4,12 +4,13 @@
 #include "openglclass.h"
 #include "GameLogic.h"
 #include "inputclass.h"
+#include "Scene.h"
 #include "KeyCode.h"
 #include "timerclass.h"
 #include "musica/libzplay.h"
 #pragma comment (lib,"musica/libzplay.lib")
 
-#pragma comment (lib,"Gdiplus.lib")
+#pragma comment (lib,"Gdiplus.lib") 
 
 ///////////////////////////////
 // PRE-PROCESSING DIRECTIVES //
@@ -27,8 +28,9 @@ struct Musica
 	string Dir;
 	string Nombre;
 };
-Musica Cancion[4];
+Musica Cancion[6];
 ZPlay* player = CreateZPlay();//Generamos un objeto puntero para nuestro reproductor
+ZPlay* player2 = CreateZPlay();
 int LVolume = 25, RVolume = 25;
 TStreamStatus status;
 bool pausa = false;
@@ -36,6 +38,7 @@ void ReproductorPausa();
 void ReproductorReproduce();
 void ReproductorInicializaYReproduce();
 void ReproductorCambiarCancionYReproduce(int);
+void AudioNPC(int);
 
 random_device rd;
 mt19937 gen(rd());
@@ -43,7 +46,7 @@ uniform_int_distribution<> distrib(0, 3);
 // aca genera un numero random del 0 al 3
 static int indexCancion = distrib(gen);
 
-void ReproductorInicializaYReproduce() {
+void ReproductorInicializa(ZPlay* players) {
 	Cancion[0].Nombre = "Inicio 1";
 	Cancion[0].Dir = "recursos/SoundTrack/Moog_City.mp3";
 	Cancion[1].Nombre = "Inicio 2";
@@ -52,6 +55,25 @@ void ReproductorInicializaYReproduce() {
 	Cancion[2].Dir = "recursos/SoundTrack/DKC__Aquatic_Ambience.mp3";
 	Cancion[3].Nombre = "Inicio 4";
 	Cancion[3].Dir = "recursos/SoundTrack/Wait.mp3";
+	Cancion[4].Nombre = "Inicio 5";
+	Cancion[4].Dir = "recursos/Audios/blablabla.mp3";
+	Cancion[5].Nombre = "Inicio 6";
+	Cancion[5].Dir = "recursos/Audios/blablabla.mp3";
+}
+
+void ReproductorInicializaYReproduce(ZPlay* Players) {
+	Cancion[0].Nombre = "Inicio 1";
+	Cancion[0].Dir = "recursos/SoundTrack/Moog_City.mp3";
+	Cancion[1].Nombre = "Inicio 2";
+	Cancion[1].Dir = "recursos/SoundTrack/Aria_Math.mp3";
+	Cancion[2].Nombre = "Inicio 3";
+	Cancion[2].Dir = "recursos/SoundTrack/DKC__Aquatic_Ambience.mp3";
+	Cancion[3].Nombre = "Inicio 4";
+	Cancion[3].Dir = "recursos/SoundTrack/Wait.mp3";
+	Cancion[4].Nombre = "Inicio 5";
+	Cancion[4].Dir = "recursos/Audios/blablabla.mp3";
+	Cancion[5].Nombre = "Inicio 6";
+	Cancion[5].Dir = "recursos/Audios/blablabla.mp3";
 
 	//random_device rd;
 	//mt19937 gen(rd());
@@ -66,43 +88,74 @@ void ReproductorInicializaYReproduce() {
 		return;
 	}
 	else {
-		player->OpenFile(Cancion[indexCancion].Dir.c_str(), sfAutodetect);
+		Players->OpenFile(Cancion[indexCancion].Dir.c_str(), sfAutodetect);
 	}
 
-	player->SetMasterVolume(LVolume, RVolume);// Sonido tipo estereo Left and Right - Volumen de 0 - 100	
+	Players->SetMasterVolume(LVolume, RVolume);// Sonido tipo estereo Left and Right - Volumen de 0 - 100	
 	//player->Play();
 }
 
-void ReproductorCambiarCancionYReproduce(int NumeroCancionAeproducir) {
-	player->Stop();
+void ReproductorCambiarCancionYReproduce(int NumeroCancionAeproducir, ZPlay* Players) {
+	Players->Stop();
 	ifstream inputFile(Cancion[NumeroCancionAeproducir].Dir.c_str());
 
 	if (!inputFile.good())
 		printf("No file found");
 	else
-		player->OpenFile(Cancion[NumeroCancionAeproducir].Dir.c_str(), sfAutodetect);
-	player->Play();
+		Players->OpenFile(Cancion[NumeroCancionAeproducir].Dir.c_str(), sfAutodetect);
+	Players->Play();
 }
 
-void ReproductorPausa() {
-	player->Pause();
+void ReproductorPausa(ZPlay* Players) {
+	Players->Pause();
 	pausa = true;
 }
 
-void ReproductorReproduce() {
+void ReproductorReproduce(ZPlay* Players) {
 	if (pausa)
-		player->Resume();
+		Players->Resume();
 	else
-		player->Play();
+		Players->Play();
 	pausa = false;
 }
 
+void AudioNPC(int pista, ZPlay* Players) {
+	ReproductorInicializa(Players);
+	Players->GetStatus(&status);
+	static bool T = false;
+
+	if (status.fPlay == 0 && T == false) { // inicia
+		//MessageBoxA(NULL, "Inicia Reproduccion.", "musica", MB_ICONINFORMATION);
+		ifstream inputFile(Cancion[pista].Dir.c_str()); 
+
+		if (!inputFile.good()) { 
+			MessageBoxA(NULL, "No file found", "No file found", MB_ICONERROR);
+			return;
+		}
+		else {
+			Players->OpenFile(Cancion[pista].Dir.c_str(), sfAutodetect);
+		}
+
+		Players->SetMasterVolume(LVolume, RVolume);// Sonido tipo estereo Left and Right - Volumen de 0 - 100	
+
+
+		T = true;
+	}
+	else if (status.fPlay == 0 && T == true) { // finaliza audio
+
+		Players->Stop();
+
+		T = false;
+	}
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
 LPCWSTR m_applicationName;
 HINSTANCE m_hinstance;
 HWND m_hwnd;
+
+Scene* Escena;
 
 OpenGLClass* m_OpenGL;
 GameLogic* GLogic;
@@ -295,6 +348,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	while (!done)
 	{
+		if (m_Input->GetKey(KeyCode.O)) {
+			AudioNPC(4, player2);
+		}
+
 		player->GetStatus(&status);
 		static bool T = false;
 
@@ -310,7 +367,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 			indexCancion = distrib(gen);
 
-			ReproductorCambiarCancionYReproduce(indexCancion);
+			ReproductorCambiarCancionYReproduce(indexCancion,player);
 
 			T = false;
 		}
@@ -333,9 +390,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 			m_Input->UpdateByFrame(msg);
 			if (m_Input->GetKeyDown(KeyCode.F1)) {
 				if (!pausa)
-					ReproductorPausa();
+					ReproductorPausa(player);
 				else
-					ReproductorReproduce();
+					ReproductorReproduce(player);
 			}
 			if (m_Input->GetKeyDown(KeyCode.F2)) {
 				LVolume -= 5;
@@ -388,7 +445,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 					else {
 						player->GetStatus(&status);
 						if (!pausa && status.fPlay == 0) {
-							ReproductorReproduce();
+							ReproductorReproduce(player);
 						}
 					}
 				}
@@ -456,7 +513,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 	{
 		SetTimer(hwnd, Timer, Tick, NULL);
-		ReproductorInicializaYReproduce();
+		ReproductorInicializaYReproduce(player);
 		return 0;
 	}
 	case WM_TIMER:

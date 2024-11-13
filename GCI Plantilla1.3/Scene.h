@@ -25,6 +25,8 @@
 #include "Billboard.h"
 #include "ShaderBillboard.h"
 
+
+
 // GLOBALS //
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -91,7 +93,7 @@ private:
 	float deltaTime;
 
 	TextureClass* LoaderTexture;
-
+	
 	//Objetos
 	GameObject* deLorean;
 	GameObject* Bochido;
@@ -103,12 +105,21 @@ private:
 	GameObject* Estanteria;
 	GameObject* Tienda;
 
+	GameObject* noticias;
+
 	//CollisionBox
 	BoundingBoxRenderer* box;
 	BoundingBoxRenderer* box2;
 
 	//Billboards
 	Billboard* arbol2D;
+	Billboard* arbol;
+	Billboard* hierba;
+	Billboard* Arbusto;
+	Billboard* PovDlorian;
+	Billboard* Man;
+	
+	//color
 
 	//Variables de Movimiento (Traslacion)
 	float speedAxisX;
@@ -135,9 +146,11 @@ private:
 	bool RenderBilboard = true;
 
 public:
+
 	Scene(OpenGLClass* OpenGLObject, HWND hwnd);
 	~Scene();
 
+	int ActivateAudio();
 	bool Initialize();
 	// Funcion cuya informacion de teclado o gamepad NO se le transfiere
 	bool Render();

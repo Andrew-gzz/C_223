@@ -26,6 +26,10 @@ public:
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);
 
+	float GetPositionX() { return m_positionX; } 
+	float GetPositionY() { return m_positionY; } 
+	float GetPositionZ() { return m_positionZ; } 
+
 	void Render();
 	void GetViewMatrix(float*);
 };

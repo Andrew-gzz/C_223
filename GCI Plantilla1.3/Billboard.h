@@ -41,7 +41,14 @@ public:
 	Billboard(OpenGLClass* OpenGL, HWND handler, TextureClass* LoaderTexRef, string texturePath);
 	~Billboard();
 
+	// se agregaron funciones para obtener la posicion del Objeto 
+	float getMatrixPosX(float*);// (1)
+	float getMatrixPosY(float*);// (2)
+	float getMatrixPosZ(float*);// (3)
+
+
 	bool Initialize(float escala);
+	bool Initialize2(float escala, float uI, float uEn);
 	bool SetShader(Shader* BillboardShader);
 	
 	float* GetWorldMatrix();

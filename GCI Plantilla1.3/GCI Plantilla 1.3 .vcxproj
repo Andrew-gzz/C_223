@@ -154,10 +154,12 @@
     <ClInclude Include="..\..\INICIO\INICIO\Inventario.h" />
     <ClInclude Include="..\..\INICIO\INICIO\Jugador.h" />
     <ClInclude Include="..\..\INICIO\INICIO\Objetos.h" />
+    <ClInclude Include="Audios.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BoundingBoxRenderer.h" />
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="ChancheColor.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="Dome.h" />
     <ClInclude Include="GameObject.h" />
