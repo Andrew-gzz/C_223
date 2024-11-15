@@ -59,6 +59,8 @@ void ReproductorInicializa(ZPlay* players) {
 	Cancion[4].Dir = "recursos/Audios/blablabla.mp3";
 	Cancion[5].Nombre = "Inicio 6";
 	Cancion[5].Dir = "recursos/Audios/blablabla.mp3";
+
+
 }
 
 void ReproductorInicializaYReproduce(ZPlay* Players) {
@@ -300,6 +302,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 			"Error", MB_OK);
 		return false;
 	}
+
 
 	// Bring the window up on the screen and set it as main focus.
 	ShowWindow(m_hwnd, SW_SHOW);

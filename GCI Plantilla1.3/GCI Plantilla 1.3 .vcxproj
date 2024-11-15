@@ -180,6 +180,7 @@
     <ClInclude Include="ShaderBillboard.h" />
     <ClInclude Include="ShaderBoundingBox.h" />
     <ClInclude Include="Land.h" />
+    <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="TextureLoaderForOpenGL.h" />
     <ClInclude Include="TextureShader.h" />
     <ClInclude Include="timerclass.h" />

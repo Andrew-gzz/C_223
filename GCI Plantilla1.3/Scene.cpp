@@ -69,7 +69,7 @@ bool Scene::Initialize() {
 		Camera->SetPosition(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z);
 		Camera->SetRotation(DeltaRotation->X, DeltaRotation->Y, DeltaRotation->Z);
 		// Con esto podriamos aislar siempre el punto de partida inicial de la escena para evitar teletrasportarse sin querer.
-	}
+	}	
 
 	Player1 = new Jugador(Camera->GetPositionX(), Camera->GetPositionY(), Camera->GetPositionZ(), 100, 10);
 	if (!Player1) {
@@ -294,7 +294,7 @@ bool Scene::Initialize() {
 	}
 
 	// Collision Boxes
-	box = new BoundingBoxRenderer(OpenGL,
+	/*box = new BoundingBoxRenderer(OpenGL,
 		BoundingBox::GLFLOAT3{ 10.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ -10.0f, -10.0f, -10.0f });
 	if (!box) {
 		result = false;
@@ -316,7 +316,7 @@ bool Scene::Initialize() {
 	}
 	else {
 		box2->SetShader(ShaderBounding);
-	}
+	}*/
 
 	// Billboards
 	ShaderBill = new BillboardShaderClass(OpenGL, handlerWindow, "shaders/billboard.vs", "shaders/billboard.ps");
@@ -446,8 +446,8 @@ bool Scene::Render() {
 	Tienda->Render(viewMatrix, projectionMatrix, true);
 	noticias->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
-	box->Draw(viewMatrix, projectionMatrix);
-	box2->Draw(viewMatrix, projectionMatrix);
+	/*box->Draw(viewMatrix, projectionMatrix);
+	box2->Draw(viewMatrix, projectionMatrix);*/
 
 	// Renderizamos los billboards
 	arbol2D->Render(viewMatrix, projectionMatrix, 
@@ -490,7 +490,7 @@ bool Scene::Render() {
 
 	/*PovDlorian->Render(viewMatrix, projectionMatrix,
 		10.0f, Terreno->Superficie(20.0f, -20.0f), -10.0f,
-		DeltaPosition->X, DeltaPosition->Z);*/
+		DeltaPosition->X, DeltaPosition->Z);*/	
 
 	//////////////////////////////////////////////////////
 
@@ -534,6 +534,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	//OpenGL->MatrixObjRotationMultiple(matrixGameObject, 0.0f, RObjY, 0.0f); // esto noe sta funcionando, despues lo arreglamos.
 
 	/////////////////////////////////////////////////////
+
+
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
 
@@ -563,20 +565,20 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 20.0f, 62.0f);
 
 	//Tranformaciones de cajas de colisión
-	float* auxMatrix = new float[16] { 0.0f };
+	/*float* auxMatrix = new float[16] { 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
 
 	float* matrixBox = box->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixBox, -40.0f, 10.0f, 40.0f);
+	OpenGL->MatrixTranslation(matrixBox, -40.0f, Terreno->Superficie(-40.0f,40.0f), 40.0f);
 
-	OpenGL->MatrixScale(auxMatrix, 1.0f, 1.0f, 0.3f);
+	OpenGL->MatrixScale(auxMatrix, 0.07f, 1.0f, 1.0f);
 	OpenGL->MatrixMultiply(matrixBox, matrixBox, auxMatrix);
 
 	float* matrixBox2 = box2->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixBox2, -40.0f, 10.0f, 40.0f);
+	OpenGL->MatrixTranslation(matrixBox2, -40.0f, Terreno->Superficie(-40.0f, 40.0f), 40.0f);
 
-	OpenGL->MatrixScale(auxMatrix, 0.3f, 1.0f, 1.0f);
-	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);
+	OpenGL->MatrixScale(auxMatrix, 1.0f, 1.0f, 0.07f);
+	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);*/
 
 
 	//Colisión por esfera
@@ -706,11 +708,13 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 		if (input->GetKey(KeyCode.E)) { // lee noticias
-			// aqui se intento hacer qeu suene un audio, pero no se logro por que no se puede llamar el 
+			// aqui se intento hacer que suene un audio, pero no se logro por que no se puede llamar el 
 			// objeto al main, y fue un pedo hacer qeu funcione junto con la musica de fondo
+			string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
+			MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
 		}
 	}
-	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	/*if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
@@ -720,8 +724,22 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-	}
+	}*/
+
 	
+	
+	// LIMITANTES DEL MUNDO
+	if (DeltaPosition->X < -480.f || DeltaPosition->X > 480.f) { // COLISION SIN LINEAS EN X
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	if (DeltaPosition->Z < -480.f || DeltaPosition->Z > 480.f) { // COLISON SIN LINEAS EN Z
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+
 
 	static bool Activar = false;
 
@@ -827,6 +845,8 @@ bool Scene::ManageCommands() {
 	if (input->GetKey(KeyCode.L)) {
 		DeltaRotation->Y += speedAxisY * deltaTime * 1.5;
 	}
+
+	
 
 
 	if (input->GetKey(KeyCode.One)) {

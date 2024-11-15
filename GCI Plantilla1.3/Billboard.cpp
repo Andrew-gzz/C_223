@@ -181,6 +181,51 @@ bool Billboard::Initialize2(float escala, float uI, float uEn) {
 	return true;
 }
 
+void Billboard::DrawImagen(GLdouble PAncho, GLdouble PAlto) {
+
+	// Configuración inicial
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, PAncho, 0, PAlto, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	// Desactivar prueba de profundidad
+	glDisable(GL_DEPTH_TEST);
+
+	// Habilitar mezcla para transparencia
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Configuración de dimensiones de la textura
+	GLfloat BillboardAncho = 1080.0f;
+	GLfloat BillboardAlto = 720.0f;
+	GLfloat BillboarX = (PAncho - BillboardAncho) / 2.0f;
+	GLfloat BillboarY = (PAlto - BillboardAlto) / 2.0f;
+
+	// Dibujo del cuadrado texturizado
+	glBindTexture(GL_TEXTURE_2D, TextureID);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1); glVertex2f(BillboarX, BillboarY);
+	glTexCoord2f(1, 1); glVertex2f(BillboarX + BillboardAncho, BillboarY);
+	glTexCoord2f(1, 0); glVertex2f(BillboarX + BillboardAncho, BillboarY + BillboardAlto);
+	glTexCoord2f(0, 0); glVertex2f(BillboarX, BillboarY + BillboardAlto);
+	glEnd();
+
+	// Restauración del estado
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+}
+
 bool Billboard::SetShader(Shader* BillboardShader) {
 	ShaderOfBillboard = BillboardShader;
 	return true;

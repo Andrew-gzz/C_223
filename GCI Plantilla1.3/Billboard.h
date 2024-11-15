@@ -49,6 +49,9 @@ public:
 
 	bool Initialize(float escala);
 	bool Initialize2(float escala, float uI, float uEn);
+
+	void DrawImagen(GLdouble PAncho, GLdouble PAlto);
+
 	bool SetShader(Shader* BillboardShader);
 	
 	float* GetWorldMatrix();

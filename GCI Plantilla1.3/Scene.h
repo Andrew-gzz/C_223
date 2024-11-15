@@ -118,12 +118,14 @@ private:
 	Billboard* hierba;
 	Billboard* Arbusto;
 	Billboard* PovDlorian;
-	Billboard* Man;
-	
+	Billboard* Man;	
+
 	//Gameplay
 	Jugador* Player1;
 	Armas* melee;
 	Armas* Guns;	
+
+	// EXTRA
 
 	//Variables de Movimiento (Traslacion)
 	float speedAxisX;
