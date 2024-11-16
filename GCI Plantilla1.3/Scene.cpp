@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <cmath>
 
 using namespace std;
 
@@ -16,6 +17,9 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	ShaderBounding = 0;
 	Triangulo = 0;
 	Light = 0;
+	SenIdalX = 0;
+	SenIdalY = 0;
+	SenIdalZ = 0;
 	speedAxisX = 0.0f;
 	speedAxisY = 0.0f;
 	speedTAxisX = 0.0f;
@@ -28,6 +32,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	RObjZ = 0.0f;
 	deLorean = 0;
 	noticias = 0;
+	Wather = 0;
 	Player1 = 0;
 	melee = 0;
 	Guns = 0;
@@ -211,7 +216,6 @@ bool Scene::Initialize() {
 		
 	}
 
-
 	if (!Tienda) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
@@ -246,6 +250,26 @@ bool Scene::Initialize() {
 		}
 		noticias->SetShaders(ShaderModel, ShaderBounding);
 	}
+
+	Wather = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Agua/Aguas.obj",
+		"recursos/Modelos/Agua/Agua_Texture.png");
+	if (!Wather) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Wather->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Wather->SetShaders(ShaderModel, ShaderBounding);
+	}
+
 /*
 
 	if (!Municion) {
@@ -375,7 +399,7 @@ bool Scene::Initialize() {
 		Arbusto->SetShader(ShaderBill);
 	}
 
-	PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
+	/*PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
 	if (!PovDlorian) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
@@ -385,7 +409,7 @@ bool Scene::Initialize() {
 	else {
 		PovDlorian->Initialize(4.0f);
 		PovDlorian->SetShader(ShaderBill);
-	}
+	}*/
 
 	Man = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Sprites/Man_96x96.png");
 	if (!Man) {
@@ -445,6 +469,7 @@ bool Scene::Render() {
 	Estanteria->Render(viewMatrix, projectionMatrix, true);
 	Tienda->Render(viewMatrix, projectionMatrix, true);
 	noticias->Render(viewMatrix, projectionMatrix, true);
+	Wather->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);*/
@@ -534,8 +559,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	//OpenGL->MatrixObjRotationMultiple(matrixGameObject, 0.0f, RObjY, 0.0f); // esto noe sta funcionando, despues lo arreglamos.
 
 	/////////////////////////////////////////////////////
-
-
+	
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
 
@@ -564,7 +588,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixNoticias = noticias->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 20.0f, 62.0f);
 
+	float* matrixAgua = Wather->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, 115.0f);
+	OpenGL->MatrixObjectScale(matrixAgua, 55.0f, 0.0f, 55.0f);
+
 	//Tranformaciones de cajas de colisión
+
 	/*float* auxMatrix = new float[16] { 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
 
@@ -726,7 +755,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}*/
 
-	
+	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
+	//OpenGL->setMatrixPosY(matrixAgua, SenIdalY);
+	OpenGL->setMatrixPosZ(matrixAgua, SenIdalZ);
 	
 	// LIMITANTES DEL MUNDO
 	if (DeltaPosition->X < -480.f || DeltaPosition->X > 480.f) { // COLISION SIN LINEAS EN X
@@ -905,6 +936,19 @@ bool Scene::ManageCommands() {
 	RObjZ < 360 ? RObjZ += 0.1f : RObjZ = 0;
 
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
+
+	const float frecX = 1.0f; const float ampX = 10.0f;
+	//const float frecY = 0.5f; const float ampY = 5.0f;
+	const float frecZ = 0.75f; const float ampZ = 8.0f;
+	
+	const float vel = 0.01f;
+	static float tiempo = 0.0f;
+
+	SenIdalX = ampX * sin(2.0f * M_PI * frecX * tiempo);
+	//SenIdalY = ampY * sin(2.0f * M_PI * frecY * tiempo);
+	SenIdalZ = ampZ * sin(2.0f * M_PI * frecZ * tiempo);
+
+	tiempo += vel;
 
 	angulo_Y = DeltaRotation->Y;
 

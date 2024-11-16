@@ -105,8 +105,8 @@ private:
 	GameObject* Fogata;
 	GameObject* Estanteria;
 	GameObject* Tienda;
-
 	GameObject* noticias;
+	GameObject* Wather;
 
 	//CollisionBox
 	BoundingBoxRenderer* box;
@@ -133,6 +133,9 @@ private:
 	float speedTAxisX;
 	float speedTAxisZ;
 	float speed;
+	float SenIdalX;
+	float SenIdalY;
+	float SenIdalZ;
 
 	//Variables de Rotacion
 	float angulo;

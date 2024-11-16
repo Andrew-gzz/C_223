@@ -589,6 +589,16 @@ float OpenGLClass::getMatrixPosZ(float* matrix) {
 	return matrix[14];
 }
 
+void OpenGLClass::setMatrixPosX(float* matrix, float X) {
+	matrix[12] = X;
+}
+void OpenGLClass::setMatrixPosY(float* matrix, float Y) {
+	matrix[13] = Y;
+}
+void OpenGLClass::setMatrixPosZ(float* matrix, float Z) {
+	matrix[14] = Z;
+}
+
 void OpenGLClass::BuildPerspectiveFovLHMatrix(float* matrix, float fieldOfView, float screenAspect, float screenNear, float screenDepth)
 {
 	matrix[0]  = 1.0f / (screenAspect * tan(fieldOfView * 0.5f));

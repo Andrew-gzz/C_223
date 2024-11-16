@@ -110,6 +110,11 @@ public:
 	float getMatrixPosY(float*);// (2)
 	float getMatrixPosZ(float*);// (3)
 
+	// se agregaron funciones para insertar la posicion del Objeto 
+	void setMatrixPosX(float*, float);// (1)
+	void setMatrixPosY(float*, float);// (2)
+	void setMatrixPosZ(float*, float);// (3)
+
 	void BuildObjIdentityMatrix(float* matrix);
 
 	void MatrixRotationY(float*, float);
