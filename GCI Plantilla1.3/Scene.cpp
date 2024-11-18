@@ -34,6 +34,8 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	noticias = 0;
 	Wather = 0;
 	Bote = 0;
+	Almacen = 0;
+	Elevador = 0;
 	Puelta = 0;
 	OXXO_in = 0;
 	CASA_in = 0;
@@ -197,7 +199,12 @@ bool Scene::Initialize() {
 	Bote = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/TiendayBote/Boat.obj",
 		"recursos/Modelos/TiendayBote/boatColor.png");
-
+	Almacen = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Edificios(EnUso)/Almacen.obj",
+		"recursos/Modelos/Edificios(EnUso)/Almacen_color1.png");
+	Elevador = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Edificios(EnUso)/Elevador.obj",
+		"recursos/Modelos/Edificios(EnUso)/Elevador_Diffuse.png");
 
 	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
 		result = false;
@@ -262,6 +269,36 @@ bool Scene::Initialize() {
 			return result;
 		}
 		Bote->SetShaders(ShaderModel, ShaderBounding);
+	}
+	if (!Almacen) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Almacen->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Almacen->SetShaders(ShaderModel, ShaderBounding);
+	}
+	if (!Elevador) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Elevador->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Elevador->SetShaders(ShaderModel, ShaderBounding);
 	}
 
 	Puelta = new GameObject(OpenGL, handlerWindow, LoaderTexture,
@@ -580,6 +617,8 @@ bool Scene::Render() {
 	Estanteria->Render(viewMatrix, projectionMatrix, true);
 	Tienda->Render(viewMatrix, projectionMatrix, true);
 	Bote->Render(viewMatrix, projectionMatrix, true);
+	Almacen->Render(viewMatrix, projectionMatrix, true);
+	Elevador->Render(viewMatrix, projectionMatrix, true);
 	noticias->Render(viewMatrix, projectionMatrix, true);
 	Wather->Render(viewMatrix, projectionMatrix, true);
 	OXXO_in->Render(viewMatrix, projectionMatrix, true);
@@ -717,6 +756,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixBote = Bote->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixBote, -125.0f, 2.0f, 115.0f);
 	OpenGL->MatrixObjectScale(matrixBote, 10.0f, 10.0f, 10.0f);
+
+	float* matrixGameObject9 = Almacen->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject9, -65.0f, 20.0f, 20.0f);
+
+	float* matrixGameObject10 = Elevador->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixGameObject10, -65.0f, 20.0f, 20.0f);
 
 	float* matrixNoticias = noticias->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 19.8f, 62.0f);
