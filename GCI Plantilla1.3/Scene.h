@@ -110,6 +110,8 @@ private:
 	GameObject* noticias;
 	GameObject* Wather;
 	GameObject* Bote;
+	GameObject* Almacen;
+	GameObject* Elevador;
 
 	GameObject* C;
 
