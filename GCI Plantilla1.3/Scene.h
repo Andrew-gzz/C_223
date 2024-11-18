@@ -25,6 +25,8 @@
 #include "Billboard.h"
 #include "ShaderBillboard.h"
 
+#include "Fog.h"
+#include "Fog2.h"
 #include "Jugador.h"
 #include "Armas.h"
 
@@ -107,6 +109,15 @@ private:
 	GameObject* Tienda;
 	GameObject* noticias;
 	GameObject* Wather;
+	GameObject* Bote;
+
+	GameObject* C;
+
+	// interiores
+
+	GameObject* Puelta;
+	GameObject* OXXO_in;
+
 
 	//CollisionBox
 	BoundingBoxRenderer* box;
@@ -126,6 +137,8 @@ private:
 	Armas* Guns;	
 
 	// EXTRA
+
+	Fog2* niebla;
 
 	//Variables de Movimiento (Traslacion)
 	float speedAxisX;

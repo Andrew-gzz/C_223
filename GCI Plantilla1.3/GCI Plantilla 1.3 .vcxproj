@@ -159,6 +159,8 @@
     <ClInclude Include="ChancheColor.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="Dome.h" />
+    <ClInclude Include="Fog.h" />
+    <ClInclude Include="Fog2.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="gamepad.h" />
     <ClInclude Include="GameLogic.h" />

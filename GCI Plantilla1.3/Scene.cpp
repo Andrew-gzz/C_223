@@ -33,6 +33,10 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	deLorean = 0;
 	noticias = 0;
 	Wather = 0;
+	Bote = 0;
+	Puelta = 0;
+	OXXO_in = 0;
+	C = 0;
 	Player1 = 0;
 	melee = 0;
 	Guns = 0;
@@ -75,6 +79,14 @@ bool Scene::Initialize() {
 		Camera->SetRotation(DeltaRotation->X, DeltaRotation->Y, DeltaRotation->Z);
 		// Con esto podriamos aislar siempre el punto de partida inicial de la escena para evitar teletrasportarse sin querer.
 	}	
+
+	niebla = new Fog2();
+	if (!niebla) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
+		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
+		return result;
+	}
 
 	Player1 = new Jugador(Camera->GetPositionX(), Camera->GetPositionY(), Camera->GetPositionZ(), 100, 10);
 	if (!Player1) {
@@ -179,8 +191,11 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Objetos(EnUso)/Estanteria.obj",
 		"recursos/Modelos/Objetos(EnUso)/Estanterias_Diffuse.png");
 	Tienda = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/Modelos/Edificios(EnUso)/Tienda.obj",
-		"recursos/Modelos/Edificios(EnUso)/Tienda_Diffuse.png");
+		"recursos/Modelos/TiendayBote/Tienda.obj",
+		"recursos/Modelos/TiendayBote/oxxo_color.png");
+	Bote = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/TiendayBote/Boat.obj",
+		"recursos/Modelos/TiendayBote/boatColor.png");
 
 
 	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
@@ -232,6 +247,60 @@ bool Scene::Initialize() {
 		Tienda->SetShaders(ShaderModel, ShaderBounding);
 	}
 
+	if (!Bote) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Bote->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Bote->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Puelta = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Puerta/Puelta.obj",
+		"recursos/Modelos/Puerta/Texture.png");
+	if (!Puelta) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Puelta->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Puelta->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	OXXO_in = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Interior_OXXO/OXXO_int.obj",
+		"recursos/Modelos/Interior_OXXO/oxxo_color.png");
+	if (!OXXO_in) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = OXXO_in->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		OXXO_in->SetShaders(ShaderModel, ShaderBounding);
+	}
+
 	noticias = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/News/Noticias.obj",
 		"recursos/Modelos/News/Noticia.png");
@@ -269,6 +338,28 @@ bool Scene::Initialize() {
 		}
 		Wather->SetShaders(ShaderModel, ShaderBounding);
 	}
+
+	// NO RENDERIZA BIEN EL MODELO
+
+	/*C = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/C-425/AlienCKF.obj",
+		"recursos/Modelos/C-425/Texture.png");
+	if (!C) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = C->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		C->SetShaders(ShaderModel, ShaderBounding);
+	}*/
+
 
 /*
 
@@ -468,8 +559,12 @@ bool Scene::Render() {
 	Fogata->Render(viewMatrix, projectionMatrix, true);
 	Estanteria->Render(viewMatrix, projectionMatrix, true);
 	Tienda->Render(viewMatrix, projectionMatrix, true);
+	Bote->Render(viewMatrix, projectionMatrix, true);
 	noticias->Render(viewMatrix, projectionMatrix, true);
 	Wather->Render(viewMatrix, projectionMatrix, true);
+	OXXO_in->Render(viewMatrix, projectionMatrix, true);
+	Puelta->Render(viewMatrix, projectionMatrix, true);
+	//C->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);*/
@@ -521,6 +616,16 @@ bool Scene::Render() {
 
 	Man->Render(viewMatrix, projectionMatrix, -81.0f, Terreno->Superficie(-81.0f, 60.0f), 60.0f, DeltaPosition->X, DeltaPosition->Z);
 
+	// no jala esta niebla ni la primera
+	niebla->setColor(0.5f, 0.5f, 0.5f);
+	niebla->setLinearRange(5.0f, 50.0f);
+	niebla->setDensity(0.22f);
+	niebla->setEquation(0);
+	niebla->getFogFactorWithProjection(viewMatrix, projectionMatrix, worldMatrix);
+	niebla->enableFog(GL_TRUE);
+
+	niebla->applyFog();
+
 	// Damos la instruccion de que termino la escena para que nos muestre frame a frame.
 	OpenGL->EndScene();
 
@@ -546,7 +651,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	Player1->setPosX(Camera->GetPositionX());
 	Player1->setPosY(Camera->GetPositionY());
 	Player1->setPosZ(Camera->GetPositionZ());
-
 
 	float* matrixTriangle = Triangulo->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 20.0f, 0.0f);
@@ -585,12 +689,31 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixGameObject8 = Tienda->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 20.0f, 20.0f);
 
+	float* matrixBote = Bote->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBote, -125.0f, 20.0f, 115.0f);
+	OpenGL->MatrixObjectScale(matrixBote, 10.0f, 10.0f, 10.0f);
+
 	float* matrixNoticias = noticias->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 20.0f, 62.0f);
+	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 19.8f, 62.0f);
+	OpenGL->MatrixObjectRotationY(matrixNoticias, 70.0f);
 
 	float* matrixAgua = Wather->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, 115.0f);
 	OpenGL->MatrixObjectScale(matrixAgua, 55.0f, 0.0f, 55.0f);
+
+	float* matrixPuelta = Puelta->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixPuelta, -34.8f, 20.0f, 15.9f);
+	OpenGL->MatrixObjectScale(matrixPuelta, 1.0f, 0.7f, 1.0f);
+
+	float* matrixOXXOint = OXXO_in->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixOXXOint, -35.8f, 10.0f, 15.0f);
+
+
+
+	//////////////////////////////////////////////////////////////
+	/*float* matrixC425 = C->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixC425, -30.0f, 20.0f, 30.0f);*/
+	/////////////////////////////////////////////////////////////
 
 	//Tranformaciones de cajas de colisión
 
@@ -609,13 +732,13 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixScale(auxMatrix, 1.0f, 1.0f, 0.07f);
 	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);*/
 
-
 	//Colisión por esfera
 	/*if (deLorean->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
 	static bool Dlor = false;
+	static bool oxxo = false;
 	//Colisión por caja
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		// desactiva la restriccon de movimiento del HitBox
@@ -676,6 +799,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
 	}
 	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
@@ -724,11 +848,32 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 	if (Tienda->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
-		DeltaPosition->X = LastDeltaPosition->X;
-		DeltaPosition->Y = LastDeltaPosition->Y;
-		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (oxxo == false) {
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+		}	
 		if (input->GetKey(KeyCode.E)) { // entrar a la tienda
+			oxxo = true;
+		}
+		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+			oxxo = true;
+		}
+		if (oxxo == true) {		
 
+			OpenGL->setMatrixPosY(matrixOXXOint, 20.0f);// interior
+			OpenGL->setMatrixPosY(matrixGameObject8, 10.0f);// tienda
+			OpenGL->setMatrixPosX(matrixGameObject7, -44.0f);// estanteria	
+			OpenGL->setMatrixPosZ(matrixGameObject7, 24.0f);
+			OpenGL->setMatrixPosX(matrixGameObject4, -44.0f);// Pistola	
+			OpenGL->setMatrixPosY(matrixGameObject4, 21.0f);
+			OpenGL->setMatrixPosZ(matrixGameObject4, 20.0f);
+			OpenGL->setMatrixPosX(matrixGameObject5, -44.0f);// kit
+			OpenGL->setMatrixPosZ(matrixGameObject5, 18.0f);
+			OpenGL->setMatrixPosX(matrixGameObject2, -44.0f);// Munision	
+			OpenGL->setMatrixPosZ(matrixGameObject2, 15.0f);
+
+			OpenGL->setMatrixPosX(matrixPuelta, -33.8f);// puelta			
 		}
 	}
 	if (noticias->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z))
@@ -753,12 +898,36 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-	}*/
+	}*/	
 
+	// aplicaciond el movimiento senoidal del agua
+	/////////////////////////////////////////////////
 	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
 	//OpenGL->setMatrixPosY(matrixAgua, SenIdalY);
 	OpenGL->setMatrixPosZ(matrixAgua, SenIdalZ);
+	/////////////////////////////////////////////////
 	
+	// LIMITES DE LA TIENDA
+	if (oxxo == true) {
+		if (DeltaPosition->X > -34.2f || DeltaPosition->X < -45.0f) { // COLISION SIN LINEAS EN X
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+			if (input->GetKey(KeyCode.Q)) { // salir de la tienda
+				oxxo = false;
+			}
+			if (input->GetKeyXbox(KeyCode.XBOX_B)) {
+				oxxo = false;
+			}
+
+		}
+		if (DeltaPosition->Z > 26.0f || DeltaPosition->Z < 14.0f) { // COLISON SIN LINEAS EN Z
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+		}
+	}
+
 	// LIMITANTES DEL MUNDO
 	if (DeltaPosition->X < -480.f || DeltaPosition->X > 480.f) { // COLISION SIN LINEAS EN X
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -876,11 +1045,8 @@ bool Scene::ManageCommands() {
 	if (input->GetKey(KeyCode.L)) {
 		DeltaRotation->Y += speedAxisY * deltaTime * 1.5;
 	}
-
 	
-
-
-	if (input->GetKey(KeyCode.One)) {
+	/*if (input->GetKey(KeyCode.One)) {
 		Bochido->ChangeTexture(0,0);
 	}
 	if (input->GetKey(KeyCode.Two)) {
@@ -909,6 +1075,11 @@ bool Scene::ManageCommands() {
 	}
 	if (input->GetKey(KeyCode.Zero)) {
 		Bochido->ChangeTexture(9, 9);
+	}*/
+
+	if (input->GetKey(KeyCode.One)) {
+	}
+	if (input->GetKey(KeyCode.Two)) {
 	}
 
 	if (input->GetKey(KeyCode.P)) {
@@ -937,6 +1108,9 @@ bool Scene::ManageCommands() {
 
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
 
+
+	// movimiento senoidal del agua
+	///////////////////////////////////////////////////
 	const float frecX = 1.0f; const float ampX = 10.0f;
 	//const float frecY = 0.5f; const float ampY = 5.0f;
 	const float frecZ = 0.75f; const float ampZ = 8.0f;
@@ -949,6 +1123,8 @@ bool Scene::ManageCommands() {
 	SenIdalZ = ampZ * sin(2.0f * M_PI * frecZ * tiempo);
 
 	tiempo += vel;
+	//////////////////////////////////////
+
 
 	angulo_Y = DeltaRotation->Y;
 
