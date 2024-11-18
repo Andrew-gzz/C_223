@@ -117,6 +117,7 @@ private:
 
 	GameObject* Puelta;
 	GameObject* OXXO_in;
+	GameObject* CASA_in;
 
 
 	//CollisionBox
@@ -172,7 +173,6 @@ public:
 	Scene(OpenGLClass* OpenGLObject, HWND hwnd);
 	~Scene();
 
-	int ActivateAudio();
 	bool Initialize();
 	// Funcion cuya informacion de teclado o gamepad NO se le transfiere
 	bool Render();

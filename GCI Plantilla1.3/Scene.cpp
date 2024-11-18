@@ -36,6 +36,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	Bote = 0;
 	Puelta = 0;
 	OXXO_in = 0;
+	CASA_in = 0;
 	C = 0;
 	Player1 = 0;
 	melee = 0;
@@ -301,6 +302,25 @@ bool Scene::Initialize() {
 		OXXO_in->SetShaders(ShaderModel, ShaderBounding);
 	}
 
+	CASA_in = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Interior_CASA/Interior2.obj",
+		"recursos/Modelos/Interior_CASA/Woods.png");
+	if (!CASA_in) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = CASA_in->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		CASA_in->SetShaders(ShaderModel, ShaderBounding);
+	}
+
 	noticias = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/News/Noticias.obj",
 		"recursos/Modelos/News/Noticia.png");
@@ -339,9 +359,9 @@ bool Scene::Initialize() {
 		Wather->SetShaders(ShaderModel, ShaderBounding);
 	}
 
-	// NO RENDERIZA BIEN EL MODELO
+	
 
-	/*C = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+	C = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/C-425/AlienCKF.obj",
 		"recursos/Modelos/C-425/Texture.png");
 	if (!C) {
@@ -358,7 +378,7 @@ bool Scene::Initialize() {
 			return result;
 		}
 		C->SetShaders(ShaderModel, ShaderBounding);
-	}*/
+	}
 
 
 /*
@@ -563,8 +583,9 @@ bool Scene::Render() {
 	noticias->Render(viewMatrix, projectionMatrix, true);
 	Wather->Render(viewMatrix, projectionMatrix, true);
 	OXXO_in->Render(viewMatrix, projectionMatrix, true);
+	CASA_in->Render(viewMatrix, projectionMatrix, true);
 	Puelta->Render(viewMatrix, projectionMatrix, true);
-	//C->Render(viewMatrix, projectionMatrix, true);
+	C->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);*/
@@ -668,29 +689,33 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
 
 	float* matrixGameObject2 = Municion->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 20.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 10.0f, -10.0f);
 
 	float* matrixGameObject3 = Casa->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject3, -20.0f, 20.0f, 20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject3, -43.0f, Terreno->Superficie(-43,95), 95.0f);
+
+	float* matrixCASAint = CASA_in->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixCASAint, -43.0f, 20.0f, 95.0f);
+	//OpenGL->MatrixObjectRotationY(matrixCASAint, 70.0f);
 
 	float* matrixGameObject4 = Pistola->GetWorldMatrix(); // Pistolita
-	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 20.0f, -15.0f);
+	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 10.0f, -15.0f);
 	OpenGL->MatrixObjectScale(matrixGameObject4, 8, 8, 8);
 
 	float* matrixGameObject5 = MedKit->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 20.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 10.0f, -17.0f);
 
 	float* matrixGameObject6 = Fogata->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject6, -22.0f, 20.0f, -17.0f);
 
 	float* matrixGameObject7 = Estanteria->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 20.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 10.0f, -17.0f);
 
 	float* matrixGameObject8 = Tienda->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject8, -40.0f, 20.0f, 20.0f);
 
 	float* matrixBote = Bote->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixBote, -125.0f, 20.0f, 115.0f);
+	OpenGL->MatrixTranslation(matrixBote, -125.0f, 2.0f, 115.0f);
 	OpenGL->MatrixObjectScale(matrixBote, 10.0f, 10.0f, 10.0f);
 
 	float* matrixNoticias = noticias->GetWorldMatrix();
@@ -709,10 +734,10 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixOXXOint, -35.8f, 10.0f, 15.0f);
 
 
-
 	//////////////////////////////////////////////////////////////
-	/*float* matrixC425 = C->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixC425, -30.0f, 20.0f, 30.0f);*/
+	float* matrixC425 = C->GetWorldMatrix(); 
+	OpenGL->MatrixTranslation(matrixC425, -10.0f, 20.0f, -9.0f);
+	OpenGL->MatrixObjectScale(matrixC425, 0.3f, 0.3f, 0.3f);
 	/////////////////////////////////////////////////////////////
 
 	//Tranformaciones de cajas de colisión
@@ -737,8 +762,11 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
+	// banderas
 	static bool Dlor = false;
 	static bool oxxo = false;
+	static bool AGUAS = false;
+
 	//Colisión por caja
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		// desactiva la restriccon de movimiento del HitBox
@@ -764,6 +792,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
 	if (Dlor == true) {
 		static float DlorianAltura = 0.0f;
+
 		// me bajo del carro
 		if (input->GetKey(KeyCode.Q)) {
 			Dlor = false;
@@ -773,6 +802,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			Dlor = false;
 			DlorianAltura = 0.0f;
 		}
+
 		// aumento la altura ( volando )
 		if (input->GetKey(KeyCode.Space)) {
 			DlorianAltura += 0.1f;
@@ -780,6 +810,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (input->GetKeyXbox(KeyCode.LT)) {
 			DlorianAltura += 0.1f;
 		}
+
 		// deciendo
 		if (input->GetKey(KeyCode.Enter)) {
 			DlorianAltura -= 0.1f;
@@ -787,9 +818,11 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (input->GetKeyXbox(KeyCode.RT)) {
 			DlorianAltura -= 0.1f;
 		}
-		DeltaPosition->Y += DlorianAltura;
-		OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
-		OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
+
+		DeltaPosition->Y += DlorianAltura; // agregamos altura
+
+		OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z); // acomodando modelo
+		OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67); // (modelo, (angulo * radianes) - grados)
 
 	}
 
@@ -900,7 +933,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}*/	
 
-	// aplicaciond el movimiento senoidal del agua
+	// aplicacion del movimiento senoidal del agua
 	/////////////////////////////////////////////////
 	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
 	//OpenGL->setMatrixPosY(matrixAgua, SenIdalY);
@@ -926,6 +959,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			DeltaPosition->Y = LastDeltaPosition->Y;
 			DeltaPosition->Z = LastDeltaPosition->Z;
 		}
+		//	P1	|	P2
+		//	X1	|	X2
+		//	Z1	|	Z2
 	}
 
 	// LIMITANTES DEL MUNDO
@@ -958,18 +994,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	
 	return result;
-}
-
-int Scene::ActivateAudio() {
-	if (noticias->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z))
-	{
-		DeltaPosition->X = LastDeltaPosition->X;
-		DeltaPosition->Y = LastDeltaPosition->Y;
-		DeltaPosition->Z = LastDeltaPosition->Z;
-		if (input->GetKey(KeyCode.E)) { // lee noticias
-			return 4;
-		}
-	}
 }
 
 bool Scene::ManageCommands() {
