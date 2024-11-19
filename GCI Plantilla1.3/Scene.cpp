@@ -39,6 +39,11 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	Puelta = 0;
 	OXXO_in = 0;
 	CASA_in = 0;
+	Gloria = 0;
+	Bate = 0;
+	Katana = 0;
+	Sarten = 0;
+	Emi = 0;
 	C = 0;
 	Player1 = 0;
 	melee = 0;
@@ -307,6 +312,25 @@ bool Scene::Initialize() {
 		Elevador->SetShaders(ShaderModel, ShaderBounding);
 	}
 
+	Emi = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/EasterEgg/EasterEgg.obj",
+		"recursos/Modelos/EasterEgg/FotoFaceEmi.bmp");
+	if (!Emi) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Emi->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Emi->SetShaders(ShaderModel, ShaderBounding);
+	}
+
 	Puelta = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Puerta/Puelta.obj",
 		"recursos/Modelos/Puerta/Texture.png");
@@ -324,6 +348,82 @@ bool Scene::Initialize() {
 			return result;
 		}
 		Puelta->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Bate = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Bate/BatePoligon.obj",
+		"recursos/Modelos/Bate/Wood048_2K-BMP_Color.bmp");
+	if (!Bate) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Bate->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Bate->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Sarten = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Sarten/Sarten.obj",
+		"recursos/Modelos/Sarten/SartenDios.bmp");
+	if (!Sarten) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Sarten->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Sarten->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Katana = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/catana/catana.obj",
+		"recursos/Modelos/catana/ColorKatana.bmp");
+	if (!Katana) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Katana->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Katana->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Gloria = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Key/Gloria.obj",
+		"recursos/Modelos/Key/Texture.png");
+	if (!Gloria) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Gloria->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Gloria->SetShaders(ShaderModel, ShaderBounding);
 	}
 
 	OXXO_in = new GameObject(OpenGL, handlerWindow, LoaderTexture,
@@ -401,8 +501,7 @@ bool Scene::Initialize() {
 		}
 		Wather->SetShaders(ShaderModel, ShaderBounding);
 	}
-
-	
+		
 
 	C = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/C-425/AlienCKF.obj",
@@ -629,7 +728,12 @@ bool Scene::Render() {
 	Wather->Render(viewMatrix, projectionMatrix, true);
 	OXXO_in->Render(viewMatrix, projectionMatrix, true);
 	CASA_in->Render(viewMatrix, projectionMatrix, true);
+	Gloria->Render(viewMatrix, projectionMatrix, true);
 	Puelta->Render(viewMatrix, projectionMatrix, true);
+	Bate->Render(viewMatrix, projectionMatrix, true);
+	Sarten->Render(viewMatrix, projectionMatrix, true);
+	Katana->Render(viewMatrix, projectionMatrix, true);
+	Emi->Render(viewMatrix, projectionMatrix, true);
 	C->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	/*box->Draw(viewMatrix, projectionMatrix);
@@ -764,18 +868,22 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixObjectScale(matrixBote, 10.0f, 10.0f, 10.0f);
 
 	float* matrixGameObject9 = Almacen->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject9, -65.0f, 20.0f, 20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject9, 79.0f, Terreno->Superficie(79.0f, 214.0f), 214.0f);
 
 	float* matrixGameObject10 = Elevador->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject10, -65.0f, 20.0f, 20.0f);
+	OpenGL->MatrixTranslation(matrixGameObject10, 79.0f, Terreno->Superficie(79.0f, 214.0f), 214.0f);
 
 	float* matrixNoticias = noticias->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixNoticias, -75.0f, 19.8f, 62.0f);
 	OpenGL->MatrixObjectRotationY(matrixNoticias, 70.0f);
 
 	float* matrixAgua = Wather->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, 115.0f);
-	OpenGL->MatrixObjectScale(matrixAgua, 55.0f, 0.0f, 55.0f);
+	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, -65.0f);
+	OpenGL->MatrixObjectScale(matrixAgua, 150.0f, 0.0f, 150.0f);
+
+	float* matrixKey = Gloria->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixKey, -45.0f, 10.0f, 100.0f);
+	OpenGL->MatrixObjectScale(matrixKey, 0.5f, 0.8f, 0.5f);
 
 	float* matrixPuelta = Puelta->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixPuelta, -34.8f, 20.0f, 15.9f);
@@ -784,7 +892,21 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	float* matrixOXXOint = OXXO_in->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixOXXOint, -35.8f, 10.0f, 15.0f);
 
+	float* matrixBate = Bate->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBate, -41.8f, 10.0f, 25.0f);
+	OpenGL->MatrixObjectScale(matrixBate, 0.6f, 0.6f, 0.6f);
+	
+	float* matrixSarten = Sarten->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixSarten, -40.8f, 10.0f, 20.0f);
+	OpenGL->MatrixObjectScale(matrixSarten, 0.5f, 0.5f, 0.5f);
 
+	float* matrixKatana = Katana->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixKatana, -40.8f, 10.0f, 15.0f);
+	OpenGL->MatrixObjectScale(matrixKatana, 0.5f, 0.5f, 0.5f);
+
+	float* matrixEmi = Emi->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixEmi, -118.0f , -2.0f, 112.0f);
+	OpenGL->MatrixObjectRotationY(matrixEmi, (DeltaRotation->Y / 180) * 3.14159265358979323846); // gira exactamente asia donde esta viendo el jugador
 	//////////////////////////////////////////////////////////////
 	float* matrixC425 = C->GetWorldMatrix(); 
 	OpenGL->MatrixTranslation(matrixC425, pos->X, pos->Y, pos->Z);
@@ -814,11 +936,17 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}*/
 
 	// banderas
+	static bool Kat = false, Bat = false, Sar = false;
+	static bool Tope = false;
+	static bool Key = false;
 	static bool Mons = false;
 	static bool Dlor = false;
 	static bool oxxo = false;
+	static bool almacen = false;
+	static int elevador = 0;
 	static bool casa = false;
 	static bool AGUAS = false;
+	static int interaccioens = 0;
 
 	//Colisión por caja
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -882,14 +1010,17 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	static int NUM = 0;
 
 	if (NUM >= 6) {
-		MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+		Tope = true;
 	}
 	if (Municion->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-		if (input->GetKey(KeyCode.E)) { // agarra la municion
+		if (Tope == true) {
+			MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+		}
+		else if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra la municion 
 			Player1->setObjInventario("Municion", NUM);
 			Guns->setCargas(Guns->getCargas() + 1);
 			NUM++;
@@ -914,6 +1045,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		OpenGL->setMatrixPosY(matrixGameObject3, 10.0f);// casa
 		OpenGL->setMatrixPosY(matrixCASAint, 20.0f);// interior
 		OpenGL->setMatrixPosX(matrixNoticias, -45.0f);// noticias
+		OpenGL->setMatrixPosY(matrixKey, 20.0f);// llave
 		OpenGL->setMatrixPosZ(matrixNoticias, 99.0f);
 	}
 	if (Pistola->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -928,6 +1060,25 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			NUM++; 
 		}
 	}
+	if (Gloria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra la llave
+			Key = true;
+			string comen = "QUE GRAN NOTICIA!! desbloqueaste la lluvia y ahora el pozo se ah llenado de agua, abra algo debajo de ahi?";
+			MessageBoxA(NULL, comen.c_str(), "Agarraste la llave", MB_OK);
+		}		
+	}
+	if (Key == true) {
+		OpenGL->setMatrixPosY(matrixKey, 10.0f);
+		OpenGL->setMatrixPosY(matrixAgua, 18.0f);
+		OpenGL->setMatrixPosY(matrixBote, 17.4f + SenIdalY);// bote
+		OpenGL->setMatrixPosY(matrixEmi, 2.0f); // EasterEgg
+		// no se mueve tan chido como pensaba
+		//OpenGL->setMatrixPosX(matrixBote, OpenGL->getMatrixPosX(matrixBote) + SenIdalX);
+		//OpenGL->setMatrixPosZ(matrixBote, OpenGL->getMatrixPosZ(matrixBote) + SenIdalZ);
+	}
 	if (MedKit->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -936,12 +1087,69 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			Player1->setVida(Player1->getVida() + 15);
 		}
 	}
+	if (Bote->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // pensamiento
+			string comen = "Simplemente es un Bote...";
+			MessageBoxA(NULL, comen.c_str(), "(Pensamiento)", MB_OK);
+		}
+	}
+	if (Emi->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // pensamiento
+			if (interaccioens == 0) {
+				string comen = "Hola, soy Emi, Soy el ayudante de Cualquier Juego, siempre aparesco en los Juegos donde el supuesto Programador Mauricio esta involucrado.";
+				MessageBoxA(NULL, comen.c_str(), "Emi El Ayudante", MB_OK);
+				interaccioens++;
+			}
+			if (interaccioens >= 1) {
+				string comen = "quieres que te ayude?";
+				int resp = MessageBoxA(NULL, comen.c_str(), "Emi El Ayudante", MB_YESNO);
+				if (resp == IDYES) {
+					if (interaccioens == 1) {
+						string comen = "bueno, El delorian se encuentra en el almacen, puedes encontrarlo en el piso Nro 4, puede que esten muchos enemigos por ahi.";
+						MessageBoxA(NULL, comen.c_str(), "Emi El Ayudante", MB_OK);
+						interaccioens++;
+					}
+					else {
+						string comen = "ya te dije donde se encuentra, no hay problemas.";
+						MessageBoxA(NULL, comen.c_str(), "Emi El Ayudante", MB_OK);
+					}
+				}
+				else {
+					string comen = "mmmm, esta bien.";
+					MessageBoxA(NULL, comen.c_str(), "Emi El Ayudante", MB_OK);
+				}
+			}
+		}
+	}
 	if (Fogata->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 		if (input->GetKey(KeyCode.E)) { // sepa que quieras hacer aqui xd
 			
+		}
+	}
+	if (Almacen->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		if (almacen == false) {
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+		}
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // entrar
+			almacen = true;
+		}
+	}
+	if (Elevador->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // subir
 		}
 	}
 	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -980,6 +1188,18 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			OpenGL->setMatrixPosX(matrixNoticias, -38.0f);// noticias
 			OpenGL->setMatrixPosZ(matrixNoticias, 24.0f);
 			OpenGL->MatrixObjectRotationY(matrixNoticias, 1.0f);
+			if (Bat == false) {
+				OpenGL->setMatrixPosY(matrixBate, 21.1f); // Bate
+			}
+			OpenGL->MatrixObjectRotationY(matrixBate, RObjY);
+			if (Sar == false) {
+				OpenGL->setMatrixPosY(matrixSarten, 21.1f); // Sarten
+			}
+			OpenGL->MatrixObjectRotationY(matrixSarten, RObjY);
+			if (Kat == false) {
+				OpenGL->setMatrixPosY(matrixKatana, 21.1f); // Katana
+			}
+			OpenGL->MatrixObjectRotationY(matrixKatana, RObjY);
 			OpenGL->setMatrixPosX(matrixPuelta, -33.8f);// puelta			
 		}
 	}
@@ -992,19 +1212,134 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			// aqui se intento hacer que suene un audio, pero no se logro por que no se puede llamar el 
 			// objeto al main, y fue un pedo hacer qeu funcione junto con la musica de fondo
 			if(casa == true){
-				string comen = "Noticia: En esta casa se encuentra la llave de la gloria";
-				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				if (Key == true) {
+					string comen = "Noticia: Soy las noticias, solamente doy pistas, pensabas que te iba decir todo?, Tengo a Peñanieto en mi estante!!";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
+				else {
+					string comen = "Noticia: En esta casa se encuentra la llave de la gloria";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
 			}
 			else if (oxxo == true) {
 				string comen = "Noticia: OXXO esta vendiendo armas, ES UNA LOCURA!!, y todo es GRATIS!!";
 				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
 			}
 			else {
-				string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
-				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				if (Key == true) {
+					string comen = "Noticia: misteriosamente a regresado el agua, pero inundo todo el mapa, MILAGRO!!";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
+				else {
+					string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
 			}
 		}
 	}
+
+	if (Bate->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (Tope == true) {
+			MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+		}
+		else if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // Bate
+			Bat = true;
+			Player1->setObjInventario("Bate", NUM);
+			string comen = " Guardaste el " + Player1->getInventario().getObjeto(NUM).getNombreObj() + " en la posicion " + to_string(NUM);
+			MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
+			NUM++;
+		}
+	}
+	if (Sarten->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (Tope == true) {
+			MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+		}
+		else if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // Sarten
+			Sar = true;
+			Player1->setObjInventario("Sarten", NUM);
+			string comen = " Guardaste el " + Player1->getInventario().getObjeto(NUM).getNombreObj() + " en la posicion " + to_string(NUM);
+			MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
+			NUM++;
+		}
+	}
+	if (Katana->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (Tope == true) {
+			MessageBoxA(handlerWindow, "Inventario Lleno", "No hay + espacio", MB_OK);
+		}
+		else if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // Katana
+			Kat = true;
+			Player1->setObjInventario("Katana", NUM);
+			string comen = " Guardaste la " + Player1->getInventario().getObjeto(NUM).getNombreObj() + " en la posicion " + to_string(NUM);
+			MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
+			NUM++;
+		}
+	}
+
+	static string OB;
+	static bool Mantener = false;
+
+	if(Mantener == true){
+
+		if (OB == "Katana") {
+			OpenGL->setMatrixPosY(matrixKatana, (DeltaPosition->Y - 1) );
+			OpenGL->setMatrixPosX(matrixKatana, DeltaRotation->X);
+			OpenGL->setMatrixPosZ(matrixKatana, DeltaRotation->Z);
+		}
+		if (OB == "Bate") {
+			OpenGL->setMatrixPosY(matrixBate, DeltaPosition->Y - 1);
+			OpenGL->setMatrixPosX(matrixBate, DeltaPosition->X - 1.0f);
+			OpenGL->setMatrixPosZ(matrixBate, DeltaPosition->Z);
+		}
+		if (OB == "Sarten") {
+			OpenGL->setMatrixPosY(matrixSarten, DeltaPosition->Y - 1);
+			OpenGL->setMatrixPosX(matrixSarten, DeltaPosition->X - 1.0f);
+			OpenGL->setMatrixPosZ(matrixSarten, DeltaPosition->Z);
+		}
+	}
+
+	if (input->GetKey(KeyCode.Zero)) {
+		OB = "Manos";
+	}
+	if (input->GetKey(KeyCode.One)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(0).getNombreObj();
+		Mantener = true;
+	}
+	if (input->GetKey(KeyCode.Two)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(1).getNombreObj();
+		Mantener = true;
+	}
+	if (input->GetKey(KeyCode.Three)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(2).getNombreObj();
+		Mantener = true;
+	}
+	if (input->GetKey(KeyCode.Four)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(3).getNombreObj();
+		Mantener = true;
+	}
+	if (input->GetKey(KeyCode.Five)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(4).getNombreObj();
+		Mantener = true;
+	}
+	if (input->GetKey(KeyCode.Six)) {
+		OB = "";
+		OB = Player1->getInventario().getObjeto(5).getNombreObj();
+		Mantener = true;
+	}
+
 	/*if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -1028,6 +1363,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	if (Pers == true) {
 		OpenGL->MatrixTranslation(matrixC425, pos->X, pos->Y, pos->Z);
 	}
+	
+	// LIMITES DEL ALMACEN
 	
 
 	// LIMITES DE LA CASA
@@ -1215,10 +1552,6 @@ bool Scene::ManageCommands() {
 		Bochido->ChangeTexture(9, 9);
 	}*/
 
-	if (input->GetKey(KeyCode.One)) {
-	}
-	if (input->GetKey(KeyCode.Two)) {
-	}
 
 	if (input->GetKey(KeyCode.P)) {
 		string Cadena = "Camara Posicion: " + to_string(Camera->GetPositionX()) + " , " + to_string(Camera->GetPositionY()) + " , " + to_string(Camera->GetPositionZ());
@@ -1239,12 +1572,14 @@ bool Scene::ManageCommands() {
 		//Skydome->Redraw();
 	}
 
+
 	// angulo_Y < 360 ? angulo_Y += 0.0f : angulo_Y = 0;
 	RObjX < 360 ? RObjX += 0.1f : RObjX = 0;
 	RObjY < 360 ? RObjY += 0.1f : RObjY = 0;
 	RObjZ < 360 ? RObjZ += 0.1f : RObjZ = 0;
 
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
+
 
 	if (DeltaPosition->X > (pos->X - 30.0f) && DeltaPosition->X < (pos->X + 30.0f)) {
 		if (DeltaPosition->Z > (pos->Z - 30.0f) && DeltaPosition->Z < (pos->Z + 30.0f)) {
@@ -1275,7 +1610,7 @@ bool Scene::ManageCommands() {
 	// movimiento senoidal del agua
 	///////////////////////////////////////////////////
 	const float frecX = 1.0f; const float ampX = 10.0f;
-	const float frecY = 0.5f; const float ampY = 5.0f;
+	const float frecY = 0.5f; const float ampY = 1.2f;
 	const float frecZ = 0.75f; const float ampZ = 8.0f;
 	
 	const float vel = 0.01f;
@@ -1288,6 +1623,8 @@ bool Scene::ManageCommands() {
 	tiempo += vel;
 	//////////////////////////////////////
 
+	/*float* matrixEmi = Emi->GetWorldMatrix();
+	OpenGL->MatrixObjectRotationY(matrixEmi, DeltaRotation->Y);*/
 
 	angulo_Y = DeltaRotation->Y;
 
