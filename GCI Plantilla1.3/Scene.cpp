@@ -796,6 +796,8 @@ bool Scene::Render() {
 
 	niebla->applyFog();
 
+	// skibiditoilet sigma popni chamba
+
 	// Damos la instruccion de que termino la escena para que nos muestre frame a frame.
 	OpenGL->EndScene();
 
