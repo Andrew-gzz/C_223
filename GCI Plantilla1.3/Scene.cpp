@@ -55,17 +55,23 @@ bool Scene::Initialize() {
 	
 	string resultDetail = "";
 
+	Pers = false;
+	anguloB = 0.0f;
 	angulo = 0.0f;
 	angulo_Y = 0.0f;
 	RObjX = 0.0f;
 	RObjY = 0.0f;
 	RObjZ = 0.0f;
+	PosX = 0.0f;
+	PosZ = 0.0f;
 	speedAxisX = SPEED_AXIS_X;
 	speedAxisY = SPEED_AXIS_Y;
 	speedTAxisX = SPEEDT_AXIS_X;
 	speedTAxisZ = SPEEDT_AXIS_Z;
 	speed = SPEED_CAMERA;
 
+	pos->X = InitialPosition[0]; pos->Y = InitialPosition[1]; pos->Z = InitialPosition[2];
+	pos->X = -120.0f; pos->Z = -10.0f;
 	// Crea un objeto camara.
 	Camera = new CameraClass;
 	if (!Camera) {
@@ -734,8 +740,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixGameObject3, -43.0f, Terreno->Superficie(-43,95), 95.0f);
 
 	float* matrixCASAint = CASA_in->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixCASAint, -43.0f, 20.0f, 95.0f);
-	//OpenGL->MatrixObjectRotationY(matrixCASAint, 70.0f);
+	OpenGL->MatrixTranslation(matrixCASAint, -47.0f, 10.0f, 101.0f);
+	OpenGL->MatrixObjectRotationY(matrixCASAint, 11.0);
 
 	float* matrixGameObject4 = Pistola->GetWorldMatrix(); // Pistolita
 	OpenGL->MatrixTranslation(matrixGameObject4, -20.0f, 10.0f, -15.0f);
@@ -781,7 +787,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	//////////////////////////////////////////////////////////////
 	float* matrixC425 = C->GetWorldMatrix(); 
-	OpenGL->MatrixTranslation(matrixC425, -10.0f, 20.0f, -9.0f);
+	OpenGL->MatrixTranslation(matrixC425, pos->X, pos->Y, pos->Z);
 	OpenGL->MatrixObjectScale(matrixC425, 0.3f, 0.3f, 0.3f);
 	/////////////////////////////////////////////////////////////
 
@@ -808,8 +814,10 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}*/
 
 	// banderas
+	static bool Mons = false;
 	static bool Dlor = false;
 	static bool oxxo = false;
+	static bool casa = false;
 	static bool AGUAS = false;
 
 	//Colisión por caja
@@ -887,10 +895,26 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			NUM++;
 		}
 	}
-	if (Casa->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
-		DeltaPosition->X = LastDeltaPosition->X;
-		DeltaPosition->Y = LastDeltaPosition->Y;
-		DeltaPosition->Z = LastDeltaPosition->Z;
+	if(casa == false){
+		if (Casa->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+			if (casa == false) {
+				DeltaPosition->X = LastDeltaPosition->X;
+				DeltaPosition->Y = LastDeltaPosition->Y;
+				DeltaPosition->Z = LastDeltaPosition->Z;
+			}
+			if (input->GetKey(KeyCode.E)) { // entrar a la casa
+				casa = true;
+			}
+			if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+				casa = true;
+			}
+		}
+	}	
+	if (casa == true) {
+		OpenGL->setMatrixPosY(matrixGameObject3, 10.0f);// casa
+		OpenGL->setMatrixPosY(matrixCASAint, 20.0f);// interior
+		OpenGL->setMatrixPosX(matrixNoticias, -45.0f);// noticias
+		OpenGL->setMatrixPosZ(matrixNoticias, 99.0f);
 	}
 	if (Pistola->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
@@ -942,15 +966,20 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			OpenGL->setMatrixPosY(matrixOXXOint, 20.0f);// interior
 			OpenGL->setMatrixPosY(matrixGameObject8, 10.0f);// tienda
 			OpenGL->setMatrixPosX(matrixGameObject7, -44.0f);// estanteria	
+			OpenGL->setMatrixPosY(matrixGameObject7, 20.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject7, 24.0f);
 			OpenGL->setMatrixPosX(matrixGameObject4, -44.0f);// Pistola	
 			OpenGL->setMatrixPosY(matrixGameObject4, 21.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject4, 20.0f);
 			OpenGL->setMatrixPosX(matrixGameObject5, -44.0f);// kit
+			OpenGL->setMatrixPosY(matrixGameObject5, 20.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject5, 18.0f);
-			OpenGL->setMatrixPosX(matrixGameObject2, -44.0f);// Munision	
+			OpenGL->setMatrixPosX(matrixGameObject2, -44.0f);// Munision
+			OpenGL->setMatrixPosY(matrixGameObject2, 20.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject2, 15.0f);
-
+			OpenGL->setMatrixPosX(matrixNoticias, -38.0f);// noticias
+			OpenGL->setMatrixPosZ(matrixNoticias, 24.0f);
+			OpenGL->MatrixObjectRotationY(matrixNoticias, 1.0f);
 			OpenGL->setMatrixPosX(matrixPuelta, -33.8f);// puelta			
 		}
 	}
@@ -962,8 +991,18 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (input->GetKey(KeyCode.E)) { // lee noticias
 			// aqui se intento hacer que suene un audio, pero no se logro por que no se puede llamar el 
 			// objeto al main, y fue un pedo hacer qeu funcione junto con la musica de fondo
-			string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
-			MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+			if(casa == true){
+				string comen = "Noticia: En esta casa se encuentra la llave de la gloria";
+				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+			}
+			else if (oxxo == true) {
+				string comen = "Noticia: OXXO esta vendiendo armas, ES UNA LOCURA!!, y todo es GRATIS!!";
+				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+			}
+			else {
+				string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
+				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+			}
 		}
 	}
 	/*if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -985,6 +1024,36 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->setMatrixPosZ(matrixAgua, SenIdalZ);
 	/////////////////////////////////////////////////
 	
+	// Persiguiendo
+	if (Pers == true) {
+		OpenGL->MatrixTranslation(matrixC425, pos->X, pos->Y, pos->Z);
+	}
+	
+
+	// LIMITES DE LA CASA
+	if (casa == true) {
+		if (DeltaPosition->X < -48.0f || DeltaPosition->X > -29.0f) { // COLISION SIN LINEAS EN X
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+
+		}
+		if (DeltaPosition->Z < 86.0f || DeltaPosition->Z > 101.0f) { // COLISON SIN LINEAS EN Z
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+			if (input->GetKey(KeyCode.Q)) { // salir de la tienda
+				casa = false;
+			}
+			if (input->GetKeyXbox(KeyCode.XBOX_B)) {
+				casa = false;
+			}
+		}
+		//	P1	|	P2
+		//	X1	|	X2
+		//	Z1	|	Z2
+	}
+
 	// LIMITES DE LA TIENDA
 	if (oxxo == true) {
 		if (DeltaPosition->X > -34.2f || DeltaPosition->X < -45.0f) { // COLISION SIN LINEAS EN X
@@ -1177,18 +1246,43 @@ bool Scene::ManageCommands() {
 
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
 
+	if (DeltaPosition->X > (pos->X - 30.0f) && DeltaPosition->X < (pos->X + 30.0f)) {
+		if (DeltaPosition->Z > (pos->Z - 30.0f) && DeltaPosition->Z < (pos->Z + 30.0f)) {
+			Pers = true;
+		}
+		else {
+			Pers = false;
+		}
+	}
+	else {
+		Pers = false;
+	}
+	if (Pers == true) {
+		if (pos->X < DeltaPosition->X) {
+			pos->X += .19;
+		}
+		if (pos->X > DeltaPosition->X) {
+			pos->X -= .19;
+		}
+		if (pos->Z < DeltaPosition->Z) {
+			pos->Z += .19;
+		}
+		if (pos->Z > DeltaPosition->Z) {
+			pos->Z -= .19;
+		}
+	}
 
 	// movimiento senoidal del agua
 	///////////////////////////////////////////////////
 	const float frecX = 1.0f; const float ampX = 10.0f;
-	//const float frecY = 0.5f; const float ampY = 5.0f;
+	const float frecY = 0.5f; const float ampY = 5.0f;
 	const float frecZ = 0.75f; const float ampZ = 8.0f;
 	
 	const float vel = 0.01f;
 	static float tiempo = 0.0f;
 
 	SenIdalX = ampX * sin(2.0f * M_PI * frecX * tiempo);
-	//SenIdalY = ampY * sin(2.0f * M_PI * frecY * tiempo);
+	SenIdalY = ampY * sin(2.0f * M_PI * frecY * tiempo);
 	SenIdalZ = ampZ * sin(2.0f * M_PI * frecZ * tiempo);
 
 	tiempo += vel;
@@ -1197,6 +1291,7 @@ bool Scene::ManageCommands() {
 
 	angulo_Y = DeltaRotation->Y;
 
+	pos->Y = Terreno->Superficie(pos->X, pos->Z);
 	DeltaPosition->Y = Terreno->Superficie(DeltaPosition->X, DeltaPosition->Z) + 2;
 
 	DeltaPosition->X += vr[0] + vrTXZ[0] + vrT90XZ[0];

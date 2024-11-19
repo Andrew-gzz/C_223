@@ -65,6 +65,9 @@ private:
 	Vector* DeltaPosition = new Vector();
 	Vector* DeltaRotation = new Vector();
 	Vector* LastDeltaPosition = new Vector();
+	Vector* pos = new Vector();
+	float anguloB;
+	bool Pers;
 
 	//Dependencias Externas
 	HWND handlerWindow = NULL;
@@ -152,6 +155,8 @@ private:
 	float SenIdalX;
 	float SenIdalY;
 	float SenIdalZ;
+	float PosX;
+	float PosZ;
 
 	//Variables de Rotacion
 	float angulo;
@@ -175,6 +180,7 @@ public:
 	Scene(OpenGLClass* OpenGLObject, HWND hwnd);
 	~Scene();
 
+	void perseguir(float,float,float,float,float);
 	bool Initialize();
 	// Funcion cuya informacion de teclado o gamepad NO se le transfiere
 	bool Render();
