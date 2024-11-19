@@ -139,6 +139,14 @@ private:
 
 	//Gameplay
 	GameObject* Gloria;
+	GameObject* Bate;
+	GameObject* Sarten;
+	GameObject* Katana;
+	GameObject* Emi;
+		
+	float P2x;
+	float P2z;
+
 	Jugador* Player1;
 	Armas* melee;
 	Armas* Guns;	
