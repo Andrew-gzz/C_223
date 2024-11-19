@@ -138,6 +138,7 @@ private:
 	Billboard* Man;	
 
 	//Gameplay
+	GameObject* Gloria;
 	Jugador* Player1;
 	Armas* melee;
 	Armas* Guns;	

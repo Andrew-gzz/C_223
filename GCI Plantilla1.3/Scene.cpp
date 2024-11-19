@@ -39,6 +39,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	Puelta = 0;
 	OXXO_in = 0;
 	CASA_in = 0;
+	Gloria = 0;
 	C = 0;
 	Player1 = 0;
 	melee = 0;
@@ -324,6 +325,25 @@ bool Scene::Initialize() {
 			return result;
 		}
 		Puelta->SetShaders(ShaderModel, ShaderBounding);
+	}
+
+	Gloria = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Key/Gloria.obj",
+		"recursos/Modelos/Key/Texture.png");
+	if (!Gloria) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Gloria->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Gloria->SetShaders(ShaderModel, ShaderBounding);
 	}
 
 	OXXO_in = new GameObject(OpenGL, handlerWindow, LoaderTexture,
@@ -629,6 +649,7 @@ bool Scene::Render() {
 	Wather->Render(viewMatrix, projectionMatrix, true);
 	OXXO_in->Render(viewMatrix, projectionMatrix, true);
 	CASA_in->Render(viewMatrix, projectionMatrix, true);
+	Gloria->Render(viewMatrix, projectionMatrix, true);
 	Puelta->Render(viewMatrix, projectionMatrix, true);
 	C->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
@@ -774,8 +795,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixObjectRotationY(matrixNoticias, 70.0f);
 
 	float* matrixAgua = Wather->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, 115.0f);
-	OpenGL->MatrixObjectScale(matrixAgua, 55.0f, 0.0f, 55.0f);
+	OpenGL->MatrixTranslation(matrixAgua, -125.0f, -1.0f, -65.0f);
+	OpenGL->MatrixObjectScale(matrixAgua, 150.0f, 0.0f, 150.0f);
+
+	float* matrixKey = Gloria->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixKey, -45.0f, 10.0f, 100.0f);
+	OpenGL->MatrixObjectScale(matrixKey, 0.5f, 0.8f, 0.5f);
 
 	float* matrixPuelta = Puelta->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixPuelta, -34.8f, 20.0f, 15.9f);
@@ -814,6 +839,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}*/
 
 	// banderas
+	static bool Key = false;
 	static bool Mons = false;
 	static bool Dlor = false;
 	static bool oxxo = false;
@@ -914,6 +940,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		OpenGL->setMatrixPosY(matrixGameObject3, 10.0f);// casa
 		OpenGL->setMatrixPosY(matrixCASAint, 20.0f);// interior
 		OpenGL->setMatrixPosX(matrixNoticias, -45.0f);// noticias
+		OpenGL->setMatrixPosY(matrixKey, 20.0f);// llave
 		OpenGL->setMatrixPosZ(matrixNoticias, 99.0f);
 	}
 	if (Pistola->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -928,12 +955,39 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			NUM++; 
 		}
 	}
+	if (Gloria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra la llave
+			Key = true;
+			string comen = "QUE GRAN NOTICIA!! desbloqueaste la lluvia y ahora el pozo se ah llenado de agua, abra algo debajo de ahi?";
+			MessageBoxA(NULL, comen.c_str(), "Agarraste la llave", MB_OK);
+		}		
+	}
+	if (Key == true) {
+		OpenGL->setMatrixPosY(matrixKey, 10.0f);
+		OpenGL->setMatrixPosY(matrixAgua, 18.0f);
+		OpenGL->setMatrixPosY(matrixBote, 17.4f + SenIdalY);
+		// no se mueve tan chido como pensaba
+		//OpenGL->setMatrixPosX(matrixBote, OpenGL->getMatrixPosX(matrixBote) + SenIdalX);
+		//OpenGL->setMatrixPosZ(matrixBote, OpenGL->getMatrixPosZ(matrixBote) + SenIdalZ);
+	}
 	if (MedKit->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 		if (input->GetKey(KeyCode.E)) { // agarra el kit
 			Player1->setVida(Player1->getVida() + 15);
+		}
+	}
+	if (Bote->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) { // pensamiento
+			string comen = "Simplemente es un Bote...";
+			MessageBoxA(NULL, comen.c_str(), "(Pensamiento)", MB_OK);
 		}
 	}
 	if (Fogata->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -992,16 +1046,28 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			// aqui se intento hacer que suene un audio, pero no se logro por que no se puede llamar el 
 			// objeto al main, y fue un pedo hacer qeu funcione junto con la musica de fondo
 			if(casa == true){
-				string comen = "Noticia: En esta casa se encuentra la llave de la gloria";
-				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				if (Key == true) {
+					string comen = "Noticia: Soy las noticias, solamente doy pistas, pensabas que te iba decir todo?, Tengo a Peñanieto en mi estante!!";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
+				else {
+					string comen = "Noticia: En esta casa se encuentra la llave de la gloria";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
 			}
 			else if (oxxo == true) {
 				string comen = "Noticia: OXXO esta vendiendo armas, ES UNA LOCURA!!, y todo es GRATIS!!";
 				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
 			}
 			else {
-				string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
-				MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				if (Key == true) {
+					string comen = "Noticia: misteriosamente a regresado el agua, pero inundo todo el mapa, MILAGRO!!";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
+				else {
+					string comen = "Noticia: Se acabo toda el agua del pozo, alguien podra hacer que se llene de agua?";
+					MessageBoxA(NULL, comen.c_str(), "NOTICIA", MB_OK);
+				}
 			}
 		}
 	}
@@ -1275,7 +1341,7 @@ bool Scene::ManageCommands() {
 	// movimiento senoidal del agua
 	///////////////////////////////////////////////////
 	const float frecX = 1.0f; const float ampX = 10.0f;
-	const float frecY = 0.5f; const float ampY = 5.0f;
+	const float frecY = 0.5f; const float ampY = 1.2f;
 	const float frecZ = 0.75f; const float ampZ = 8.0f;
 	
 	const float vel = 0.01f;
