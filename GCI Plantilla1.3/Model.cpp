@@ -14,6 +14,7 @@ Model::Model(){
 	TextureID[4] = 0;
 
 	box = NULL;
+	box2 = NULL;
 }
 
 Model::Model(OpenGLClass* OpenGL, HWND hwnd, TextureClass* LoaderTexRef){
@@ -104,6 +105,10 @@ bool Model::Initialize(const char* objPath, string texturePath) {
 	if (!box) {
 		return false;
 	}
+	box2 = new BoundingBox();
+	if (!box2) {
+		return false;
+	}
 
 	BoundingBox::GLFLOAT3 maxBox;
 	BoundingBox::GLFLOAT3 minBox;
@@ -123,6 +128,10 @@ bool Model::Initialize(const char* objPath, string texturePath) {
 	color.a = 1.0;
 
 	result = box->Initialize(OpenGL, maxBox, minBox, color);
+	if (!result) {
+		return false;
+	}
+	result = box2->Initialize(OpenGL, maxBox, minBox, color);
 	if (!result) {
 		return false;
 	}
@@ -1071,4 +1080,5 @@ void Model::Shutdown(OpenGLClass* OpenGL)
 
 BoundingBox* Model::GetBox() {
 	return this->box;
+	return this->box2;
 }

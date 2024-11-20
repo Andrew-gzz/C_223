@@ -570,10 +570,18 @@ bool Scene::Initialize() {
 		Skydome->SetShader(ShaderSky);
 	}
 
-	// Collision Boxes
-	/*box = new BoundingBoxRenderer(OpenGL,
+	// Caja de Colisiones
+	// Caja de Colisiones Almacen
+	box = new BoundingBoxRenderer(OpenGL,
 		BoundingBox::GLFLOAT3{ 10.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ -10.0f, -10.0f, -10.0f });
-	if (!box) {
+	box2 = new BoundingBoxRenderer(OpenGL,
+		BoundingBox::GLFLOAT3{ 30.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ 10.0f, -10.0f, -10.0f });
+	box3 = new BoundingBoxRenderer(OpenGL,
+		BoundingBox::GLFLOAT3{ 30.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ 10.0f, -10.0f, -10.0f });
+	box4 = new BoundingBoxRenderer(OpenGL,
+		BoundingBox::GLFLOAT3{ 30.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ 10.0f, -10.0f, -10.0f });
+
+	if (!box|| !box2|| !box3 || !box4) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the box.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
@@ -581,19 +589,23 @@ bool Scene::Initialize() {
 	}
 	else {
 		box->SetShader(ShaderBounding);
-	}
-
-	box2 = new BoundingBoxRenderer(OpenGL,
-		BoundingBox::GLFLOAT3{ 30.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ 10.0f, -10.0f, -10.0f });
-	if (!box) {
+		box2->SetShader(ShaderBounding);
+		box3->SetShader(ShaderBounding);
+		box4->SetShader(ShaderBounding);
+	}		 
+	// Caja de Colisones Elevador
+	box5 = new BoundingBoxRenderer(OpenGL,
+		BoundingBox::GLFLOAT3{ 1.0f, 1.0f, 1.0f }, BoundingBox::GLFLOAT3{ -1.0f, -1.0f, -1.0f }); 
+	if (!box5) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the box.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
-		box2->SetShader(ShaderBounding);
-	}*/
+		box5->SetShader(ShaderBounding);
+	}
+
 
 	// Billboards
 	ShaderBill = new BillboardShaderClass(OpenGL, handlerWindow, "shaders/billboard.vs", "shaders/billboard.ps");
@@ -736,8 +748,11 @@ bool Scene::Render() {
 	Emi->Render(viewMatrix, projectionMatrix, true);
 	C->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
-	/*box->Draw(viewMatrix, projectionMatrix);
-	box2->Draw(viewMatrix, projectionMatrix);*/
+	box->Draw(viewMatrix, projectionMatrix);
+	box2->Draw(viewMatrix, projectionMatrix);
+	box3->Draw(viewMatrix, projectionMatrix);
+	box4->Draw(viewMatrix, projectionMatrix);
+	box5->Draw(viewMatrix, projectionMatrix);
 
 	// Renderizamos los billboards
 	arbol2D->Render(viewMatrix, projectionMatrix, 
@@ -916,12 +931,30 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/////////////////////////////////////////////////////////////
 
 	//Tranformaciones de cajas de colisión
+	//Almacen colisiones
+	float* matrixBox = box->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox, 63.8f, 19, 214);//Pared izq x,y,z
+	OpenGL->MatrixObjectScale(matrixBox, 0.01f,1.0f,1.0f);
+	
+	float* matrixBox2 = box2->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox2, 93.8f, 19, 214);//Pared izq x,y,z
+	OpenGL->MatrixObjectScale(matrixBox2, 0.01f, 1.0f, 1.0f);
+
+	float* matrixBox3 = box3->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox3, 50.8f, 19, 224.2);//Pared izq x,y,z
+	OpenGL->MatrixObjectScale(matrixBox3, 1.3f, 1.0f, 0.01f);
+
+	float* matrixBox4 = box4->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox4, 72.8f, 19, 204.0f);//Pared izq x,y,z
+	OpenGL->MatrixObjectScale(matrixBox4, 0.7f, 1.0f, 0.01f);
+	//Elevador
+	float* matrixBox5 = box5->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox5, 90.8f, 19, 222.0f);//Pared izq x,y,z
+	OpenGL->MatrixObjectScale(matrixBox5, 2.8f, 2.8f, 2.8f);
+
 
 	/*float* auxMatrix = new float[16] { 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
-
-	float* matrixBox = box->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixBox, -40.0f, Terreno->Superficie(-40.0f,40.0f), 40.0f);
 
 	OpenGL->MatrixScale(auxMatrix, 0.07f, 1.0f, 1.0f);
 	OpenGL->MatrixMultiply(matrixBox, matrixBox, auxMatrix);
@@ -930,10 +963,10 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixBox2, -40.0f, Terreno->Superficie(-40.0f, 40.0f), 40.0f);
 
 	OpenGL->MatrixScale(auxMatrix, 1.0f, 1.0f, 0.07f);
-	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);*/
+	OpenGL->MatrixMultiply(matrixBox2, matrixBox2, auxMatrix);
 
 	//Colisión por esfera
-	/*if (deLorean->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
+	if (deLorean->GetSphericalCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z, 2)) {
 		MessageBox(handlerWindow, L"Colisionando", L"Aviso", MB_OK);
 	}*/
 
@@ -1137,6 +1170,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			
 		}
 	}
+	/*
 	if (Almacen->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		if (almacen == false) {
 			DeltaPosition->X = LastDeltaPosition->X;
@@ -1147,13 +1181,14 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			almacen = true;
 		}
 	}
-	if (Elevador->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	*/
+	/*if (Elevador->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // subir
 		}
-	}
+	}*/
 	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -1341,19 +1376,37 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		OB = Player1->getInventario().getObjeto(5).getNombreObj();
 		Mantener = true;
 	}
-
-	/*if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	
+	//No se que es pero Colision
+	if (box->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+	
+	if (box2->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 
-	if (box2->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+	if (box3->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-	}*/	
+	}
 
+	if (box4->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
+
+	if (box5->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		DeltaPosition->X = LastDeltaPosition->X;
+		DeltaPosition->Y = LastDeltaPosition->Y;
+		DeltaPosition->Z = LastDeltaPosition->Z;
+	}
 	// aplicacion del movimiento senoidal del agua
 	/////////////////////////////////////////////////
 	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
