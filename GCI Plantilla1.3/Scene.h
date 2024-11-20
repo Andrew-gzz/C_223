@@ -128,7 +128,9 @@ private:
 	//CollisionBox
 	BoundingBoxRenderer* box;
 	BoundingBoxRenderer* box2;
-
+	BoundingBoxRenderer* box3;
+	BoundingBoxRenderer* box4;
+	BoundingBoxRenderer* box5;
 	//Billboards
 	Billboard* arbol2D;
 	Billboard* arbol;

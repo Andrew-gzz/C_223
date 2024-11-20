@@ -81,6 +81,7 @@ private:
 	int MaxTexturesPerModel;
 	TextureClass* LoaderTextureReference;
 	BoundingBox* box;
+	BoundingBox* box2;
 protected:
 
 	//Important
