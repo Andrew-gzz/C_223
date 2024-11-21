@@ -619,15 +619,20 @@ bool Scene::Initialize() {
 	}		 
 	// Caja de Colisones Elevador
 	box5 = new BoundingBoxRenderer(OpenGL,
-		BoundingBox::GLFLOAT3{ 1.0f, 1.0f, 1.0f }, BoundingBox::GLFLOAT3{ -1.0f, -1.0f, -1.0f }); 
-	if (!box5) {
+		BoundingBox::GLFLOAT3{ 1.0f, 1.0f, 1.0f }, BoundingBox::GLFLOAT3{ -1.0f, -1.0f, -1.0f });
+
+	box6 = new BoundingBoxRenderer(OpenGL,
+		BoundingBox::GLFLOAT3{ 1.0f, 1.0f, 1.0f }, BoundingBox::GLFLOAT3{ -1.0f, -1.0f, -1.0f });
+	if (!box5 || !box6) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the box.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
 		return result;
 	}
 	else {
+
 		box5->SetShader(ShaderBounding);
+		box6->SetShader(ShaderBounding);
 	}
 
 
@@ -777,7 +782,7 @@ bool Scene::Render() {
 	box3->Draw(viewMatrix, projectionMatrix);
 	box4->Draw(viewMatrix, projectionMatrix);
 	box5->Draw(viewMatrix, projectionMatrix);
-
+	box6->Draw(viewMatrix, projectionMatrix);
 	// Renderizamos los billboards
 	arbol2D->Render(viewMatrix, projectionMatrix, 
 		0.0f, Terreno->Superficie(0.0f, 0.0f), 0.0f, 
@@ -867,7 +872,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixTriangle, -20.0f, 20.0f, 0.0f);
 
 	float* matrixGameObject = deLorean->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject, -20.0f, 20.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject, 79.0f, 28.0f, 214.0f);
 	///////////////////////////////////////////////////////////////////
 
 	//OpenGL->MatrixObjectRotationY(matrixGameObject, RObjY); // este si jala, solo lo tengo para provar cosas.
@@ -977,6 +982,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixBox5, 90.8f, 19, 222.0f);//Pared izq x,y,z
 	OpenGL->MatrixObjectScale(matrixBox5, 2.8f, 2.8f, 2.8f);
 
+	float* matrixBox6 = box6->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixBox6, 79.0f, 20.0f, 214.0f);//
+	OpenGL->MatrixObjectScale(matrixBox6, 2.8f, 2.8f, 2.8f);
 
 	/*float* auxMatrix = new float[16] { 0.0f };
 	OpenGL->BuildIdentityMatrix(auxMatrix);
@@ -1002,6 +1010,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	static bool Mons = false;
 	static bool Dlor = false;
 	static bool Boch = false;
+	static bool UseElevador = false;
 	static bool oxxo = false;
 	static bool almacen = false;
 	static int elevador = 0;
@@ -1011,26 +1020,9 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	//Colisión por caja
 
-	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
-		// desactiva la restriccon de movimiento del HitBox
-		if (Dlor == false) {
-			DeltaPosition->X = LastDeltaPosition->X;
-			DeltaPosition->Y = LastDeltaPosition->Y;
-			DeltaPosition->Z = LastDeltaPosition->Z;
-		}
-		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) {
-			Dlor = true;
-		}
-		// este if hace que al pegarte al Dlorian y piques a la "E" el modelo estara en la posicion de la camara
-		// pero unicamente se podra mover el modelo del Dlorian en el "hitbox" dodne se cargo el modelo
-		/*if (Dlor == true) {
-			OpenGL->MatrixTranslation(matrixGameObject, DeltaPosition->X, DeltaPosition->Y - 1.3f, DeltaPosition->Z);
-			OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
-		}*/
-	}
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
 	if (Dlor == true) {
-		static float DlorianAltura = 0.0f;
+		static float DlorianAltura = 22.5f;
 
 		// me bajo del carro
 		if (input->GetKey(KeyCode.Q) || input->GetKeyXbox(KeyCode.XBOX_B)) {
@@ -1441,6 +1433,28 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
+		if (input->GetKey(KeyCode.E)) {
+			altura = 30.0f;
+			UseElevador = true;
+			MessageBoxA(handlerWindow, "Subiendo", "Elevador dice", MB_OK);
+		}
+	}
+	if (altura != 19.0f && Dlor != true) {
+		DeltaPosition->Y = altura;
+		Player1->setPosY(altura);
+	}
+	if (box6->GetBoxCollision(DeltaPosition->X, 19.0f, DeltaPosition->Z) && UseElevador == true) {
+		if (Dlor == false) {
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+		}
+		if (input->GetKey(KeyCode.E)) {
+			Dlor = true;
+		}
+		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+			Dlor = true;
+		}
 	}
 
 	// aplicacion del movimiento senoidal del agua

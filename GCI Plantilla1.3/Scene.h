@@ -132,6 +132,8 @@ private:
 	BoundingBoxRenderer* box3;
 	BoundingBoxRenderer* box4;
 	BoundingBoxRenderer* box5;
+	BoundingBoxRenderer* box6;
+	float altura = 19.0f;
 	//Billboards
 	Billboard* arbol2D;
 	Billboard* arbol;
