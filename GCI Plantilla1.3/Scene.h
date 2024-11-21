@@ -131,6 +131,9 @@ private:
 	BoundingBoxRenderer* box3;
 	BoundingBoxRenderer* box4;
 	BoundingBoxRenderer* box5;
+	BoundingBoxRenderer* box6;
+	float altura = 19.0f; 
+
 	//Billboards
 	Billboard* arbol2D;
 	Billboard* arbol;
@@ -185,6 +188,10 @@ private:
 	//Banderas de habilitacion
 	bool RenderObject3d = true;
 	bool RenderBilboard = true;
+
+	//para subir y bajar box6
+	float yPosition = 10.0f;
+	float yDirection = 1.0f;
 
 public:
 
