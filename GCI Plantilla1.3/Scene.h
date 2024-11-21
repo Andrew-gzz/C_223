@@ -118,6 +118,11 @@ private:
 	GameObject* Elevador;
 
 	GameObject* C;
+	//Arboles
+	GameObject* Arbol;
+	GameObject* Arbol2;
+	GameObject* Arbol3;
+	GameObject* Arbol4;
 
 	// interiores
 
@@ -141,6 +146,11 @@ private:
 	Billboard* Arbusto;
 	Billboard* PovDlorian;
 	Billboard* Man;	
+
+	//mas billboards
+	Billboard* Catsup;//Para nada sangre
+	Billboard* Fuego;
+
 
 	//Gameplay
 	GameObject* Gloria;

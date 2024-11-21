@@ -45,6 +45,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	Sarten = 0;
 	Emi = 0;
 	C = 0;
+	Arbol = 0;
 	Player1 = 0;
 	Enemigo = 0;
 	melee = 0;
@@ -546,6 +547,39 @@ bool Scene::Initialize() {
 		C->SetShaders(ShaderModel, ShaderBounding);
 	}
 
+	Arbol = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Arboles(EnUso)/Arbol_1.obj",
+		"recursos/Modelos/Arboles(EnUso)/Textures/Arbol1.png");
+	Arbol2 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Arboles(EnUso)/Arbol_2.obj",
+		"recursos/Modelos/Arboles(EnUso)/Textures/Arbol2.png");
+	Arbol3 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Arboles(EnUso)/Arbol_1.obj",
+		"recursos/Modelos/Arboles(EnUso)/Textures/Arbol1.png");
+	Arbol4 = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+		"recursos/Modelos/Arboles(EnUso)/Arbol_2.obj",
+		"recursos/Modelos/Arboles(EnUso)/Textures/Arbol2.png");
+	if (!Arbol|| !Arbol2|| !Arbol3|| !Arbol4) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Arbol->Initialize();
+		result = Arbol2->Initialize();
+		result = Arbol3->Initialize();
+		result = Arbol4->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Arbol->SetShaders(ShaderModel, ShaderBounding);
+		Arbol2->SetShaders(ShaderModel, ShaderBounding);
+		Arbol3->SetShaders(ShaderModel, ShaderBounding);
+		Arbol4->SetShaders(ShaderModel, ShaderBounding);
+	}
 
 /*
 
@@ -692,7 +726,22 @@ bool Scene::Initialize() {
 		Arbusto->Initialize(1.0f);
 		Arbusto->SetShader(ShaderBill);
 	}
+	Catsup = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/bloodspray.png");
+	Fuego = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/Fire.png");
 
+	if (!Catsup||!Fuego) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		Catsup->Initialize(1.0f);
+		Catsup->SetShader(ShaderBill);
+
+		Fuego->Initialize(1.0f);
+		Fuego->SetShader(ShaderBill);
+	}
 	/*PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
 	if (!PovDlorian) {
 		result = false;
@@ -776,6 +825,11 @@ bool Scene::Render() {
 	Katana->Render(viewMatrix, projectionMatrix, true);
 	Emi->Render(viewMatrix, projectionMatrix, true);
 	C->Render(viewMatrix, projectionMatrix, true);
+	//Renderizar arbol
+	Arbol->Render(viewMatrix, projectionMatrix, true);
+	Arbol2->Render(viewMatrix, projectionMatrix, true);
+	Arbol3->Render(viewMatrix, projectionMatrix, true);
+	Arbol4->Render(viewMatrix, projectionMatrix, true);
 	// Renderizamos las cajas de colisión
 	box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);
@@ -791,6 +845,7 @@ bool Scene::Render() {
 	Arbusto->Render(viewMatrix, projectionMatrix,
 		0.1f, Terreno->Superficie(0.1f, -0.1f), -0.1f,
 		DeltaPosition->X, DeltaPosition->Z);
+
 
 	/*arbol2D->Render(viewMatrix, projectionMatrix, 
 		-10.0f, Terreno->Superficie(-10.0f, -10.0f), -10.0f, 
@@ -820,6 +875,7 @@ bool Scene::Render() {
 		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f,
 		DeltaPosition->X, DeltaPosition->Z);
 
+	
 	//////////////////////////////////////////////////////
 
 	/*PovDlorian->Render(viewMatrix, projectionMatrix,
@@ -881,7 +937,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/////////////////////////////////////////////////////
 	
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject1, -41.0f, 21.0f, 9.0f);
+	OpenGL->MatrixTranslation(matrixGameObject1, -30.5, 19.6, 23.0f);
+	OpenGL->MatrixObjectScale(matrixGameObject1, 2.0f, 2.0f, 2.0f);
 
 	float* matrixGameObject2 = Municion->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 10.0f, -10.0f);
@@ -902,7 +959,8 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixGameObject5, -20.0f, 10.0f, -17.0f);
 
 	float* matrixGameObject6 = Fogata->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject6, -22.0f, 20.0f, -17.0f);
+	OpenGL->MatrixTranslation(matrixGameObject6, 47.0f, 19.5f, 95.0f);
+	OpenGL->MatrixObjectScale(matrixGameObject6, 3.5f, 3.5f, 3.5f);
 
 	float* matrixGameObject7 = Estanteria->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject7, -24.0f, 10.0f, -17.0f);
@@ -959,6 +1017,22 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixTranslation(matrixC425, pos->X, pos->Y, pos->Z);
 	OpenGL->MatrixObjectScale(matrixC425, 0.3f, 0.3f, 0.3f);
 	/////////////////////////////////////////////////////////////
+	//Arboles
+	float* matrixtree = Arbol->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixtree, 50.8f, 18.5, 210.2);
+	OpenGL->MatrixObjectScale(matrixtree, 1.0f, 1.0f, 1.0f);
+
+	float* matrixtree2 = Arbol2->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixtree2, -39.8f, 18.7f, 4.0f);
+	OpenGL->MatrixObjectScale(matrixtree2, 1.0f, 1.0f, 1.0f);
+
+	float* matrixtree3 = Arbol3->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixtree3, -32.4f, 18.5, 83.2);
+	OpenGL->MatrixObjectScale(matrixtree3, 1.0f, 1.0f, 1.0f);
+
+	float* matrixtree4 = Arbol4->GetWorldMatrix();
+	OpenGL->MatrixTranslation(matrixtree4, 53.8f, 18.5, 103.2);
+	OpenGL->MatrixObjectScale(matrixtree4, 1.0f, 1.0f, 1.0f);
 
 	//Tranformaciones de cajas de colisión
 	//Almacen colisiones
@@ -1287,7 +1361,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			}
 		}
 	}
-
 	if (Bate->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -1436,12 +1509,13 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		if (input->GetKey(KeyCode.E)) {
 			altura = 30.0f;
 			UseElevador = true;
-			MessageBoxA(handlerWindow, "Subiendo", "Elevador dice", MB_OK);
+			MessageBoxA(handlerWindow, "Subiendo", "Elevador dice", MB_OK);			
 		}
 	}
 	if (altura != 19.0f && Dlor != true) {
 		DeltaPosition->Y = altura;
 		Player1->setPosY(altura);
+
 	}
 	if (box6->GetBoxCollision(DeltaPosition->X, 19.0f, DeltaPosition->Z) && UseElevador == true) {
 		if (Dlor == false) {
@@ -1450,13 +1524,18 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			DeltaPosition->Z = LastDeltaPosition->Z;
 		}
 		if (input->GetKey(KeyCode.E)) {
+			MessageBoxA(handlerWindow, "Enserio un DLorean? que conveniente", "En tu mente:", MB_OK);
 			Dlor = true;
 		}
 		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
 			Dlor = true;
 		}
 	}
-
+	if (Bochido->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {		
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;		
+	}
 	// aplicacion del movimiento senoidal del agua
 
 	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
@@ -1799,4 +1878,8 @@ bool Scene::Shutdown() {
 	}
 
 	return result;
+}
+
+void IniObjNoInteractuables() {
+
 }
