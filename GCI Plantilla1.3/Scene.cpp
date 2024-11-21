@@ -630,6 +630,7 @@ bool Scene::Initialize() {
 
 	// Caja de Colisiones
 	// Caja de Colisiones Almacen
+	
 	box = new BoundingBoxRenderer(OpenGL,
 		BoundingBox::GLFLOAT3{ 10.0f, 10.0f, 10.0f }, BoundingBox::GLFLOAT3{ -10.0f, -10.0f, -10.0f });
 	box2 = new BoundingBoxRenderer(OpenGL,
@@ -727,9 +728,12 @@ bool Scene::Initialize() {
 		Arbusto->SetShader(ShaderBill);
 	}
 	Catsup = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/bloodspray.png");
-	Fuego = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/Fire.png");
+	Fuego = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/OneFire.png");
+	Fuego2 = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/TwoFire.png");
+	Fuego3 = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/ThirdFire.png");
+	Fuego4 = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/ForFire.png");
 
-	if (!Catsup||!Fuego) {
+	if (!Catsup||!Fuego||!Fuego2|| !Fuego3 || !Fuego4) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
@@ -741,6 +745,15 @@ bool Scene::Initialize() {
 
 		Fuego->Initialize(1.0f);
 		Fuego->SetShader(ShaderBill);
+
+		Fuego2->Initialize(1.0f);
+		Fuego2->SetShader(ShaderBill);
+
+		Fuego3->Initialize(1.0f);
+		Fuego3->SetShader(ShaderBill);
+
+		Fuego4->Initialize(1.0f);
+		Fuego4->SetShader(ShaderBill);
 	}
 	/*PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
 	if (!PovDlorian) {
@@ -780,6 +793,8 @@ bool Scene::Render() {
 	float viewMatrix[16];
 	float projectionMatrix[16];
 
+	
+
 	// Actualiza la posicion y rotacion de la camara
 	Camera->SetPosition(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z);
 	Camera->SetRotation(DeltaRotation->X, DeltaRotation->Y, DeltaRotation->Z);
@@ -802,41 +817,43 @@ bool Scene::Render() {
 	Triangulo->Render(viewMatrix, projectionMatrix);
 
 	// Renderizamos nuestros objetos en la escena
-	deLorean->Render(viewMatrix, projectionMatrix, true);
-	Bochido->Render(viewMatrix, projectionMatrix, true);
-	Municion->Render(viewMatrix, projectionMatrix, true);
-	Casa->Render(viewMatrix, projectionMatrix, true);  
-	Pistola->Render(viewMatrix, projectionMatrix, true);
-	MedKit->Render(viewMatrix, projectionMatrix, true);
-	Fogata->Render(viewMatrix, projectionMatrix, true);
-	Estanteria->Render(viewMatrix, projectionMatrix, true);
-	Tienda->Render(viewMatrix, projectionMatrix, true);
-	Bote->Render(viewMatrix, projectionMatrix, true);
-	Almacen->Render(viewMatrix, projectionMatrix, true);
-	Elevador->Render(viewMatrix, projectionMatrix, true);
-	noticias->Render(viewMatrix, projectionMatrix, true);
-	Wather->Render(viewMatrix, projectionMatrix, true);
-	OXXO_in->Render(viewMatrix, projectionMatrix, true);
-	CASA_in->Render(viewMatrix, projectionMatrix, true);
-	Gloria->Render(viewMatrix, projectionMatrix, true);
-	Puelta->Render(viewMatrix, projectionMatrix, true);
-	Bate->Render(viewMatrix, projectionMatrix, true);
-	Sarten->Render(viewMatrix, projectionMatrix, true);
-	Katana->Render(viewMatrix, projectionMatrix, true);
-	Emi->Render(viewMatrix, projectionMatrix, true);
-	C->Render(viewMatrix, projectionMatrix, true);
+	deLorean->Render(viewMatrix, projectionMatrix, Caja);
+	Bochido->Render(viewMatrix, projectionMatrix, Caja);
+	Municion->Render(viewMatrix, projectionMatrix, Caja);
+	Casa->Render(viewMatrix, projectionMatrix, Caja);  
+	Pistola->Render(viewMatrix, projectionMatrix, Caja);
+	MedKit->Render(viewMatrix, projectionMatrix, Caja);
+	Fogata->Render(viewMatrix, projectionMatrix, Caja);
+	Estanteria->Render(viewMatrix, projectionMatrix, Caja);
+	Tienda->Render(viewMatrix, projectionMatrix, Caja);
+	Bote->Render(viewMatrix, projectionMatrix, Caja);
+	Almacen->Render(viewMatrix, projectionMatrix, Caja);
+	Elevador->Render(viewMatrix, projectionMatrix, Caja);
+	noticias->Render(viewMatrix, projectionMatrix, Caja);
+	Wather->Render(viewMatrix, projectionMatrix, Caja);
+	OXXO_in->Render(viewMatrix, projectionMatrix, Caja);
+	CASA_in->Render(viewMatrix, projectionMatrix, Caja);
+	Gloria->Render(viewMatrix, projectionMatrix, Caja);
+	Puelta->Render(viewMatrix, projectionMatrix, Caja);
+	Bate->Render(viewMatrix, projectionMatrix, Caja);
+	Sarten->Render(viewMatrix, projectionMatrix, Caja);
+	Katana->Render(viewMatrix, projectionMatrix, Caja);
+	Emi->Render(viewMatrix, projectionMatrix, Caja);
+	C->Render(viewMatrix, projectionMatrix, Caja);
 	//Renderizar arbol
-	Arbol->Render(viewMatrix, projectionMatrix, true);
-	Arbol2->Render(viewMatrix, projectionMatrix, true);
-	Arbol3->Render(viewMatrix, projectionMatrix, true);
-	Arbol4->Render(viewMatrix, projectionMatrix, true);
+	Arbol->Render(viewMatrix, projectionMatrix, Caja);
+	Arbol2->Render(viewMatrix, projectionMatrix, Caja);
+	Arbol3->Render(viewMatrix, projectionMatrix, Caja);
+	Arbol4->Render(viewMatrix, projectionMatrix, Caja);
 	// Renderizamos las cajas de colisión
+	if(Caja){
 	box->Draw(viewMatrix, projectionMatrix);
 	box2->Draw(viewMatrix, projectionMatrix);
 	box3->Draw(viewMatrix, projectionMatrix);
 	box4->Draw(viewMatrix, projectionMatrix);
 	box5->Draw(viewMatrix, projectionMatrix);
 	box6->Draw(viewMatrix, projectionMatrix);
+	}
 	// Renderizamos los billboards
 	arbol2D->Render(viewMatrix, projectionMatrix, 
 		0.0f, Terreno->Superficie(0.0f, 0.0f), 0.0f, 
@@ -847,6 +864,42 @@ bool Scene::Render() {
 		DeltaPosition->X, DeltaPosition->Z);
 
 
+	static float elapsedTime = 0.0f;
+	elapsedTime += deltaTime*0.01;
+
+	// Cambia el billboard activo cada segundo
+	if (elapsedTime >= 1.0f)
+	{
+		currentBillboard = (currentBillboard + 1) % 4; // Cicla entre 0, 1 y 2
+		elapsedTime = 0.0f;
+	}
+
+	// Renderiza solo el billboard activo
+	switch (currentBillboard)
+	{
+	case 0:
+		Fuego->Render(viewMatrix, projectionMatrix,
+			47.0f, 20.0f, 95.0f,
+			DeltaPosition->X, DeltaPosition->Z);
+		break;
+
+	case 1:
+		Fuego2->Render(viewMatrix, projectionMatrix,
+			47.0f, 20.0f, 95.0f,
+			DeltaPosition->X, DeltaPosition->Z);
+		break;
+
+	case 2:
+		Fuego3->Render(viewMatrix, projectionMatrix,
+			47.0f, 20.0f, 95.0f,
+			DeltaPosition->X, DeltaPosition->Z);
+		break;
+	case 3:
+		Fuego4->Render(viewMatrix, projectionMatrix,
+			47.0f, 20.0f, 95.0f,
+			DeltaPosition->X, DeltaPosition->Z);
+		break;
+	}
 	/*arbol2D->Render(viewMatrix, projectionMatrix, 
 		-10.0f, Terreno->Superficie(-10.0f, -10.0f), -10.0f, 
 		DeltaPosition->X, DeltaPosition->Z);
@@ -1692,7 +1745,13 @@ bool Scene::ManageCommands() {
 	if (input->GetKey(KeyCode.L)) {
 		DeltaRotation->Y += speedAxisY * deltaTime * 1.5;
 	}
-	
+
+	if (input->GetKey(KeyCode.Control) && input->GetKey(KeyCode.H) && !Caja) {
+		Caja = true;
+	}
+	if (input->GetKey(KeyCode.Control) && input->GetKey(KeyCode.G) && Caja) { 
+		Caja = false;
+	}
 	/*if (input->GetKey(KeyCode.One)) {
 		Bochido->ChangeTexture(0,0);
 	}

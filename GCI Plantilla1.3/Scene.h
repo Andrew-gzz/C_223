@@ -149,8 +149,12 @@ private:
 
 	//mas billboards
 	Billboard* Catsup;//Para nada sangre
-	Billboard* Fuego;
 
+	int currentBillboard = 0;
+	Billboard* Fuego;
+	Billboard* Fuego2;
+	Billboard* Fuego3;
+	Billboard* Fuego4;
 
 	//Gameplay
 	GameObject* Gloria;
@@ -163,6 +167,7 @@ private:
 	float P2z;
 
 	bool Polacion;
+	bool Caja = false; //Para renderizar cajas
 
 	Jugador* Player1;
 	Jugador* Enemigo;
