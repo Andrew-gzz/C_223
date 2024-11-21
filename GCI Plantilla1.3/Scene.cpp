@@ -1080,7 +1080,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	OpenGL->MatrixObjectScale(matrixtree2, 1.0f, 1.0f, 1.0f);
 
 	float* matrixtree3 = Arbol3->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixtree3, -32.4f, 18.5, 83.2);
+	OpenGL->MatrixTranslation(matrixtree3, -26.4f, 18.5, 77.2);
 	OpenGL->MatrixObjectScale(matrixtree3, 1.0f, 1.0f, 1.0f);
 
 	float* matrixtree4 = Arbol4->GetWorldMatrix();
@@ -1826,7 +1826,7 @@ bool Scene::ManageCommands() {
 		}
 		else { ATK = false; }
 	}
-	else { ATK == false; }
+	else { ATK = false; }
 	
 	static double time = 0;
 

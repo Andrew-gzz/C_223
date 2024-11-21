@@ -339,6 +339,9 @@ bool Dome::Tarde() {
 			this->coeficienteDeCambio * (10.00f / 165.00f),
 			this->coeficienteDeCambio * (10.00f / 1.00f),
 			this->coeficienteDeCambio * 10.00f);*/
+
+		ChancheTexture("recursos/Skydome/Skye_Amn");
+
 		Redraw();
 		return false;
 	}
@@ -359,6 +362,9 @@ bool Dome::Tarde() {
 		// Equivalencia del color entre 255 para sacarlo = 1.0
 		// EJ: 165 / 255 = .064705fM
 		//this->RedefineColor(1.00f, 0.64705f, 0.00f, 1.00f);
+
+		ChancheTexture("recursos/Skydome/Skye_Amn");
+
 		Redraw();
 		elapsedTime = 0;
 		return true;
@@ -388,6 +394,9 @@ bool Dome::Noche() {
 			this->coeficienteDeCambio * (10.00f / 1.00f),
 			this->coeficienteDeCambio * (10.00f / 1.00f),
 			this->coeficienteDeCambio * 10.00f);*/
+
+		ChancheTexture("recursos/Skydome/Skye_Night");
+
 		Redraw();
 		return false;
 	}
@@ -405,6 +414,9 @@ bool Dome::Noche() {
 			(65.00f / 255.00f),
 			(65.00f / 255.00f),
 			(255.00f / 255.00f));
+
+		ChancheTexture("recursos/Skydome/Skye_Night");
+
 		Redraw();
 		elapsedTime = 0;
 		return true;
@@ -434,6 +446,9 @@ bool Dome::Amanecer() {
 			this->coeficienteDeCambio * (10.00f / 230.00f),
 			this->coeficienteDeCambio * (10.00f / 230.00f),
 			this->coeficienteDeCambio * 10.00f);*/
+
+		ChancheTexture("recursos/Skydome/Skye_NochAmn");
+
 		Redraw();
 		return false;
 	}
@@ -451,6 +466,9 @@ bool Dome::Amanecer() {
 			(255.00f / 255.00f),
 			(255.00f / 255.00f),
 			(255.00f / 255.00f));
+
+		ChancheTexture("recursos/Skydome/Skye_NochAmn");
+
 		Redraw();
 		elapsedTime = 0;
 		return true;
