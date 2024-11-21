@@ -203,8 +203,8 @@ void Billboard::DrawImagen(GLdouble PAncho, GLdouble PAlto) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Configuración de dimensiones de la textura
-	GLfloat BillboardAncho = 1080.0f;
-	GLfloat BillboardAlto = 720.0f;
+	GLfloat BillboardAncho = 480.0f;
+	GLfloat BillboardAlto = 384.0f;
 	GLfloat BillboarX = (PAncho - BillboardAncho) / 2.0f;
 	GLfloat BillboarY = (PAlto - BillboardAlto) / 2.0f;
 
