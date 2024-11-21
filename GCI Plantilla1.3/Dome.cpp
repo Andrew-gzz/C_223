@@ -349,8 +349,8 @@ bool Dome::Tarde() {
 	else {
 		interpolacionAmanecerTarde = false; //Bandera
 		interpolacionTardeNoche = true; //Bandera
-		cicloLuz = 360; //Segundos en que permanece la textura actual
-		cicloInterpolacionSeg = 200; // Lo que me demoro en cambiar a la siguiente textura
+		cicloLuz = 180; //Segundos en que permanece la textura actual
+		cicloInterpolacionSeg = 90; // Lo que me demoro en cambiar a la siguiente textura
 		// definimos el color que se supone debe inicializar para la siguiente fase
 		RedefineColor((255.00f / 255.00f),
 			(170.00f / 255.00f),
