@@ -155,6 +155,12 @@ private:
 	Billboard* Fuego2;
 	Billboard* Fuego3;
 	Billboard* Fuego4;
+	//BillBoard para guiar
+	Billboard* PressE;
+	Billboard* PressE1;
+
+
+
 
 	//Gameplay
 	GameObject* Gloria;
