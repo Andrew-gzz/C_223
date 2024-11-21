@@ -184,8 +184,8 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Carros(EnUso)/deLorean.obj",
 		"recursos/Modelos/Carros(EnUso)/Color.png");
 	Bochido = new GameObject(OpenGL, handlerWindow, LoaderTexture,
-		"recursos/Modelos/Carros(EnUso)/Bochido.obj",
-		"recursos/Modelos/Carros(EnUso)/Color.png");
+		"recursos/Modelos/Carros(EnUso)/Boat.obj",
+		"recursos/Modelos/Carros(EnUso)/boatColor.png");
 	Municion = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Objetos(EnUso)/Ammo.obj",
 		"recursos/Modelos/Objetos(EnUso)/Textures/Ammo.png");
@@ -205,6 +205,7 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Objetos(EnUso)/Estanteria.obj",
 		"recursos/Modelos/Objetos(EnUso)/Estanterias_Diffuse.png");
 	Tienda = new GameObject(OpenGL, handlerWindow, LoaderTexture,
+<<<<<<< Updated upstream
 		"recursos/Modelos/TiendayBote/Tienda.obj",
 		"recursos/Modelos/TiendayBote/oxxo_color.png");
 	Bote = new GameObject(OpenGL, handlerWindow, LoaderTexture,
@@ -216,6 +217,11 @@ bool Scene::Initialize() {
 	Elevador = new GameObject(OpenGL, handlerWindow, LoaderTexture,
 		"recursos/Modelos/Edificios(EnUso)/Elevador.obj",
 		"recursos/Modelos/Edificios(EnUso)/Elevador_Diffuse.png");
+=======
+		"recursos/Modelos/Edificios(EnUso)/Almacen.obj",
+		"recursos/Modelos/Edificios(EnUso)/Almacen_color1.png");
+
+>>>>>>> Stashed changes
 
 	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
 		result = false;
