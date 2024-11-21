@@ -755,6 +755,21 @@ bool Scene::Initialize() {
 		Fuego4->Initialize(1.0f);
 		Fuego4->SetShader(ShaderBill);
 	}
+	PressE = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/E.png");
+	PressE1 = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Bilboards/Billboard(EnUso)/E.png");
+	if (!PressE||!PressE1) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the billboard.", "Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		PressE->Initialize(0.2f);
+		PressE->SetShader(ShaderBill);
+		PressE1->Initialize(0.2f);
+		PressE1->SetShader(ShaderBill);
+	}
+
 	/*PovDlorian = new Billboard(OpenGL, handlerWindow, LoaderTexture, "recursos/Imagenes/Pov_Dlorean.png");
 	if (!PovDlorian) {
 		result = false;
@@ -863,6 +878,14 @@ bool Scene::Render() {
 		0.1f, Terreno->Superficie(0.1f, -0.1f), -0.1f,
 		DeltaPosition->X, DeltaPosition->Z);
 
+	//BillBoard para guiar
+	PressE->Render(viewMatrix, projectionMatrix,
+		88.0f,18.0f, 221.3f,
+		DeltaPosition->X, DeltaPosition->Z);
+
+	PressE1->Render(viewMatrix, projectionMatrix,
+		-33.9f, 21.0f, 16.4f,
+		DeltaPosition->X, DeltaPosition->Z);
 
 	static float elapsedTime = 0.0f;
 	elapsedTime += deltaTime*0.01;
@@ -900,21 +923,6 @@ bool Scene::Render() {
 			DeltaPosition->X, DeltaPosition->Z);
 		break;
 	}
-	/*arbol2D->Render(viewMatrix, projectionMatrix, 
-		-10.0f, Terreno->Superficie(-10.0f, -10.0f), -10.0f, 
-		DeltaPosition->X, DeltaPosition->Z);
-
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		10.0f, Terreno->Superficie(10.0f, 10.0f), 10.0f, 
-		DeltaPosition->X, DeltaPosition->Z);
-
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		-10.0f, Terreno->Superficie(-10.0f, 10.0f), 10.0f, 
-		DeltaPosition->X, DeltaPosition->Z);
-
-	arbol2D->Render(viewMatrix, projectionMatrix, 
-		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f, 
-		DeltaPosition->X, DeltaPosition->Z);*/
 
 	arbol->Render(viewMatrix, projectionMatrix,
 		10.0f, Terreno->Superficie(10.0f, -10.0f), -10.0f,
