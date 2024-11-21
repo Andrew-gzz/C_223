@@ -68,6 +68,7 @@ private:
 	Vector* pos = new Vector();
 	float anguloB;
 	bool Pers;
+	bool ATK;
 
 	//Dependencias Externas
 	HWND handlerWindow = NULL;
@@ -149,7 +150,10 @@ private:
 	float P2x;
 	float P2z;
 
+	bool Polacion;
+
 	Jugador* Player1;
+	Jugador* Enemigo;
 	Armas* melee;
 	Armas* Guns;	
 

@@ -46,6 +46,7 @@ Scene::Scene(OpenGLClass* OpenGLObject, HWND hwnd) {
 	Emi = 0;
 	C = 0;
 	Player1 = 0;
+	Enemigo = 0;
 	melee = 0;
 	Guns = 0;
 	LoaderTexture = new TextureClass(OpenGL);
@@ -60,6 +61,7 @@ bool Scene::Initialize() {
 	
 	string resultDetail = "";
 
+	Polacion = true;
 	Pers = false;
 	anguloB = 0.0f;
 	angulo = 0.0f;
@@ -76,7 +78,7 @@ bool Scene::Initialize() {
 	speed = SPEED_CAMERA;
 
 	pos->X = InitialPosition[0]; pos->Y = InitialPosition[1]; pos->Z = InitialPosition[2];
-	pos->X = -120.0f; pos->Z = -10.0f;
+	pos->X = 70.0f; pos->Z = 197.0f;
 	// Crea un objeto camara.
 	Camera = new CameraClass;
 	if (!Camera) {
@@ -104,6 +106,14 @@ bool Scene::Initialize() {
 
 	Player1 = new Jugador(Camera->GetPositionX(), Camera->GetPositionY(), Camera->GetPositionZ(), 100, 10);
 	if (!Player1) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
+		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
+		return result;
+	}
+
+	Enemigo = new Jugador(pos->X, pos->Y, pos->Z, 100, 5);
+	if (!Enemigo) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not declared and initialized the light shader object.", "Error", MB_OK);
 		_RPT1(0, "Alert! LightShader has an error on declare and not been initialized. \n", 0);
@@ -217,7 +227,7 @@ bool Scene::Initialize() {
 		"recursos/Modelos/Edificios(EnUso)/Elevador.obj",
 		"recursos/Modelos/Edificios(EnUso)/Elevador_Diffuse.png");
 
-	if (!deLorean || !Bochido || !Municion || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
+	if (!deLorean || !Bochido || !Casa || !Pistola || !MedKit || !Fogata || !Estanteria || !Tienda) {
 		result = false;
 		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "Error", MB_OK);
 		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
@@ -225,8 +235,7 @@ bool Scene::Initialize() {
 	}
 	else {
 		result = deLorean->Initialize();
-		result = Bochido->Initialize(); 
-		result = Municion->Initialize();
+		result = Bochido->Initialize();
 		result = Casa->Initialize();
 		result = Pistola->Initialize();
 		result = MedKit->Initialize();
@@ -241,13 +250,28 @@ bool Scene::Initialize() {
 		}
 		deLorean->SetShaders(ShaderModel, ShaderBounding);
 		Bochido->SetShaders(ShaderModel, ShaderBounding);
-		Municion->SetShaders(ShaderModel, ShaderBounding);
 		Casa->SetShaders(ShaderModel, ShaderBounding);
 		Pistola->SetShaders(ShaderModel, ShaderBounding);
 		MedKit->SetShaders(ShaderModel, ShaderBounding);
 		Fogata->SetShaders(ShaderModel, ShaderBounding);
 		Estanteria->SetShaders(ShaderModel, ShaderBounding);
 		
+	}
+
+	if (!Municion) {
+		result = false;
+		MessageBoxA(handlerWindow, "Could not initialize the GameObject.", "1Error", MB_OK);
+		_RPT1(0, "Alert! GameObject has an error on start. \n", 0);
+		return result;
+	}
+	else {
+		result = Municion->Initialize();
+		if (!result) {
+			MessageBoxA(handlerWindow, "Could not initialize the model of Gameobject.", "1Error", MB_OK);
+			_RPT1(0, "Alert! GameObject has an error on initialize. \n", 0);
+			return result;
+		}
+		Municion->SetShaders(ShaderModel, ShaderBounding);
 	}
 
 	if (!Tienda) {
@@ -852,10 +876,11 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	/////////////////////////////////////////////////////
 	
 	float* matrixGameObject1 = Bochido->GetWorldMatrix();
-	OpenGL->MatrixTranslation(matrixGameObject1, -30.0f, 20.0f, -10.0f);
+	OpenGL->MatrixTranslation(matrixGameObject1, -41.0f, 21.0f, 9.0f);
 
 	float* matrixGameObject2 = Municion->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject2, -40.0f, 10.0f, -10.0f);
+	OpenGL->MatrixScale(matrixGameObject2, 2.0f, 2.0f, 2.0f);
 
 	float* matrixGameObject3 = Casa->GetWorldMatrix();
 	OpenGL->MatrixTranslation(matrixGameObject3, -43.0f, Terreno->Superficie(-43,95), 95.0f);
@@ -976,6 +1001,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	static bool Key = false;
 	static bool Mons = false;
 	static bool Dlor = false;
+	static bool Boch = false;
 	static bool oxxo = false;
 	static bool almacen = false;
 	static int elevador = 0;
@@ -984,6 +1010,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	static int interaccioens = 0;
 
 	//Colisión por caja
+
 	if (deLorean->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		// desactiva la restriccon de movimiento del HitBox
 		if (Dlor == false) {
@@ -991,10 +1018,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			DeltaPosition->Y = LastDeltaPosition->Y;
 			DeltaPosition->Z = LastDeltaPosition->Z;
 		}
-		if (input->GetKey(KeyCode.E)) {
-			Dlor = true;
-		}
-		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) {
 			Dlor = true;
 		}
 		// este if hace que al pegarte al Dlorian y piques a la "E" el modelo estara en la posicion de la camara
@@ -1004,34 +1028,21 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			OpenGL->MatrixObjectRotationY(matrixGameObject, (angulo_Y * 0.0174532925f) - 92.67);
 		}*/
 	}
-
 	// este if hace que el modelo este en la posicion de la camara en todo el mapa picando "E"
 	if (Dlor == true) {
 		static float DlorianAltura = 0.0f;
 
 		// me bajo del carro
-		if (input->GetKey(KeyCode.Q)) {
+		if (input->GetKey(KeyCode.Q) || input->GetKeyXbox(KeyCode.XBOX_B)) {
 			Dlor = false;
 			DlorianAltura = 0.0f;
 		}
-		if (input->GetKeyXbox(KeyCode.XBOX_B)) {
-			Dlor = false;
-			DlorianAltura = 0.0f;
-		}
-
 		// aumento la altura ( volando )
-		if (input->GetKey(KeyCode.Space)) {
+		if (input->GetKey(KeyCode.Space) || input->GetKeyXbox(KeyCode.LT)) {
 			DlorianAltura += 0.1f;
 		}
-		if (input->GetKeyXbox(KeyCode.LT)) {
-			DlorianAltura += 0.1f;
-		}
-
 		// deciendo
-		if (input->GetKey(KeyCode.Enter)) {
-			DlorianAltura -= 0.1f;
-		}
-		if (input->GetKeyXbox(KeyCode.RT)) {
+		if (input->GetKey(KeyCode.Enter) || input->GetKeyXbox(KeyCode.RT)) {
 			DlorianAltura -= 0.1f;
 		}
 
@@ -1042,6 +1053,25 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 
 	}
 
+	if (Bochido->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
+		// desactiva la restriccon de movimiento del HitBox
+		if (Boch == false) {
+			DeltaPosition->X = LastDeltaPosition->X;
+			DeltaPosition->Y = LastDeltaPosition->Y;
+			DeltaPosition->Z = LastDeltaPosition->Z;
+		}
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) {
+			Boch = true;
+		}
+	}
+	if (Boch == true) {
+		// me bajo del carro
+		if (input->GetKey(KeyCode.Q) || input->GetKeyXbox(KeyCode.XBOX_B)) {
+			Boch = false;
+		}
+		OpenGL->MatrixTranslation(matrixGameObject1, DeltaPosition->X, DeltaPosition->Y -0.98f, DeltaPosition->Z); // acomodando modelo
+		OpenGL->MatrixObjectRotationY(matrixGameObject1, (angulo_Y * 0.0174532925f) - 92.67); // (modelo, (angulo * radianes) - grados)
+	}
 	static int NUM = 0;
 
 	if (NUM >= 6) {
@@ -1058,25 +1088,28 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		else if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra la municion 
 			Player1->setObjInventario("Municion", NUM);
 			Guns->setCargas(Guns->getCargas() + 1);
+			string comen = " Guardaste la " + Player1->getInventario().getObjeto(NUM).getNombreObj() + " en la posicion " + to_string(NUM) +
+				"ahora tienes " + to_string(Guns->getCargas()) + " Cargas.";
+			MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
 			NUM++;
 		}
 	}
 	if(casa == false){
+
+		Polacion = true;
 		if (Casa->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 			if (casa == false) {
 				DeltaPosition->X = LastDeltaPosition->X;
 				DeltaPosition->Y = LastDeltaPosition->Y;
 				DeltaPosition->Z = LastDeltaPosition->Z;
 			}
-			if (input->GetKey(KeyCode.E)) { // entrar a la casa
-				casa = true;
-			}
-			if (input->GetKeyXbox(KeyCode.XBOX_A)) {
+			if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // entrar a la casa
 				casa = true;
 			}
 		}
 	}	
 	if (casa == true) {
+		Polacion = false;
 		OpenGL->setMatrixPosY(matrixGameObject3, 10.0f);// casa
 		OpenGL->setMatrixPosY(matrixCASAint, 20.0f);// interior
 		OpenGL->setMatrixPosX(matrixNoticias, -45.0f);// noticias
@@ -1087,11 +1120,12 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-		if (input->GetKey(KeyCode.E)) { // agarra el arma
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra el arma
 			Guns->setArm("Pistola");
 			Guns->setMunicion(15);
-			Player1->setObjInvt(Guns->getArma(), NUM); 
-			Player1->setDamage(Player1->getDaño() * 1.5);			 
+			Player1->setObjInvt(Guns->getArma(), NUM);	
+			string comen = " Guardaste la " + Player1->getInventario().getObjeto(NUM).getNombreObj() + " en la posicion " + to_string(NUM);
+			MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
 			NUM++; 
 		}
 	}
@@ -1118,8 +1152,16 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-		if (input->GetKey(KeyCode.E)) { // agarra el kit
-			Player1->setVida(Player1->getVida() + 15);
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // agarra el kit
+			if (Player1->getVida() == 100) {
+				string comen = " Vida: " + Player1->getVida();
+				MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
+			}
+			else {
+				Player1->setVida(Player1->getVida() + 25);
+				string comen = " Vida: " + Player1->getVida();
+				MessageBoxA(NULL, comen.c_str(), "INVENTARIO", MB_OK);
+			}
 		}
 	}
 	if (Bote->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
@@ -1170,25 +1212,6 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			
 		}
 	}
-	/*
-	if (Almacen->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
-		if (almacen == false) {
-			DeltaPosition->X = LastDeltaPosition->X;
-			DeltaPosition->Y = LastDeltaPosition->Y;
-			DeltaPosition->Z = LastDeltaPosition->Z;
-		}
-		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // entrar
-			almacen = true;
-		}
-	}
-	*/
-	/*if (Elevador->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
-		DeltaPosition->X = LastDeltaPosition->X;
-		DeltaPosition->Y = LastDeltaPosition->Y;
-		DeltaPosition->Z = LastDeltaPosition->Z;
-		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // subir
-		}
-	}*/
 	if (Estanteria->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
@@ -1196,18 +1219,16 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 	}
 	if (Tienda->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		if (oxxo == false) {
+			Polacion = true;
 			DeltaPosition->X = LastDeltaPosition->X;
 			DeltaPosition->Y = LastDeltaPosition->Y;
 			DeltaPosition->Z = LastDeltaPosition->Z;
 		}	
-		if (input->GetKey(KeyCode.E)) { // entrar a la tienda
+		if (input->GetKey(KeyCode.E) || input->GetKeyXbox(KeyCode.XBOX_A)) { // entrar a la tienda
 			oxxo = true;
 		}
-		if (input->GetKeyXbox(KeyCode.XBOX_A)) {
-			oxxo = true;
-		}
-		if (oxxo == true) {		
-
+		if (oxxo == true) {	
+			Polacion = false;
 			OpenGL->setMatrixPosY(matrixOXXOint, 20.0f);// interior
 			OpenGL->setMatrixPosY(matrixGameObject8, 10.0f);// tienda
 			OpenGL->setMatrixPosX(matrixGameObject7, -44.0f);// estanteria	
@@ -1220,7 +1241,7 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 			OpenGL->setMatrixPosY(matrixGameObject5, 20.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject5, 18.0f);
 			OpenGL->setMatrixPosX(matrixGameObject2, -44.0f);// Munision
-			OpenGL->setMatrixPosY(matrixGameObject2, 20.0f);
+			OpenGL->setMatrixPosY(matrixGameObject2, 21.0f);
 			OpenGL->setMatrixPosZ(matrixGameObject2, 15.0f);
 			OpenGL->setMatrixPosX(matrixNoticias, -38.0f);// noticias
 			OpenGL->setMatrixPosZ(matrixNoticias, 24.0f);
@@ -1321,26 +1342,44 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		}
 	}
 
+	// PETATEADO
+	if (Player1->getVida() <= 0.0f) {
+		string comen = " Moriste, vida: " + to_string(Player1->getVida());
+		MessageBoxA(NULL, comen.c_str(), "Game Over", MB_OK);
+	}
+	//
+
 	static string OB;
 	static bool Mantener = false;
 
 	if(Mantener == true){
-
 		if (OB == "Katana") {
+			Player1->setDamage(80);
 			OpenGL->setMatrixPosY(matrixKatana, (DeltaPosition->Y - 1) );
-			OpenGL->setMatrixPosX(matrixKatana, DeltaRotation->X);
-			OpenGL->setMatrixPosZ(matrixKatana, DeltaRotation->Z);
+			OpenGL->setMatrixPosX(matrixKatana, DeltaPosition->X - 1.0f);
+			OpenGL->setMatrixPosZ(matrixKatana, DeltaPosition->Z);
 		}
 		if (OB == "Bate") {
+			Player1->setDamage(40);
 			OpenGL->setMatrixPosY(matrixBate, DeltaPosition->Y - 1);
 			OpenGL->setMatrixPosX(matrixBate, DeltaPosition->X - 1.0f);
 			OpenGL->setMatrixPosZ(matrixBate, DeltaPosition->Z);
 		}
 		if (OB == "Sarten") {
+			Player1->setDamage(50);
 			OpenGL->setMatrixPosY(matrixSarten, DeltaPosition->Y - 1);
 			OpenGL->setMatrixPosX(matrixSarten, DeltaPosition->X - 1.0f);
 			OpenGL->setMatrixPosZ(matrixSarten, DeltaPosition->Z);
 		}
+		if (OB == "Pistola") {
+			Player1->setDamage(60);
+			OpenGL->setMatrixPosY(matrixGameObject4, DeltaPosition->Y - 1);
+			OpenGL->setMatrixPosX(matrixGameObject4, DeltaPosition->X - 1.0f); 
+			OpenGL->setMatrixPosZ(matrixGameObject4, DeltaPosition->Z); 
+		}
+	}
+	if (input->GetKey(KeyCode.U) || input->GetKeyXbox(KeyCode.XBOX_X)) {
+		Player1->getDaño();
 	}
 
 	if (input->GetKey(KeyCode.Zero)) {
@@ -1382,37 +1421,33 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
-	}
-	
+	}	
 	if (box2->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
-
 	if (box3->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
-
 	if (box4->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
-
 	if (box5->GetBoxCollision(DeltaPosition->X, DeltaPosition->Y, DeltaPosition->Z)) {
 		DeltaPosition->X = LastDeltaPosition->X;
 		DeltaPosition->Y = LastDeltaPosition->Y;
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
+
 	// aplicacion del movimiento senoidal del agua
-	/////////////////////////////////////////////////
+
 	OpenGL->setMatrixPosX(matrixAgua, SenIdalX);
 	//OpenGL->setMatrixPosY(matrixAgua, SenIdalY);
 	OpenGL->setMatrixPosZ(matrixAgua, SenIdalZ);
-	/////////////////////////////////////////////////
 	
 	// Persiguiendo
 	if (Pers == true) {
@@ -1482,21 +1517,10 @@ bool Scene::Update(InputClass* input, float deltaTime) {
 		DeltaPosition->Z = LastDeltaPosition->Z;
 	}
 
-
-	static bool Activar = false;
-
 	if (input->GetKey(KeyCode.Shift) == true) {
 		speed += speed * .03;
 	}
 	else{ speed = SPEED_CAMERA; }
-
-	/*if (input->GetKey(KeyCode.Shift) ) {
-		if (Activar == true) { Activar = false; }
-		else if (Activar == false) { Activar = true; }
-
-		if (Activar == true) { speed += speed * 1.2; }
-		else if (Activar == false) { speed = SPEED_CAMERA; }
-	}*/
 
 	
 	return result;
@@ -1618,9 +1642,13 @@ bool Scene::ManageCommands() {
 	}
 
 	//Skydome->transicion(dna, colorDia, colorAnochecer, 3000);
-	Skydome->CicloInterpolaciones(); // comentar o descomentar para las interpolaciones
+
+	if (Polacion == true) {
+		Skydome->CicloInterpolaciones(); // comentar o descomentar para las interpolaciones
+		Skydome->Redraw();
+	}
+
 	//Skydome->RedefineColor(0, 0, 0, 0);
-	Skydome->Redraw();
 
 	if (input->GetKey(KeyCode.One)) {
 		//Skydome->RedefineColor(0, 0, 0, 250);
@@ -1636,17 +1664,53 @@ bool Scene::ManageCommands() {
 	angulo < 360 ? angulo += 0.1f : angulo = 0;
 
 
-	if (DeltaPosition->X > (pos->X - 30.0f) && DeltaPosition->X < (pos->X + 30.0f)) {
-		if (DeltaPosition->Z > (pos->Z - 30.0f) && DeltaPosition->Z < (pos->Z + 30.0f)) {
-			Pers = true;
+	static int SIoNO[3] = { 0,0,0 };
+
+	// RANGO DE ATAQUE DEL BICHO (r = 10)
+	if (SIoNO[0] == 0) {
+		if (DeltaPosition->X > (pos->X - 10.0f) && DeltaPosition->X < (pos->X + 10.0f)) {
+			if (DeltaPosition->Z > (pos->Z - 10.0f) && DeltaPosition->Z < (pos->Z + 10.0f)) { ATK = true; }
+			else { ATK = false; }
 		}
-		else {
-			Pers = false;
+		else { ATK = false; }
+	}
+	else { ATK == false; }
+	
+	static double time = 0;
+
+	// TIEMPO DE ATAQUE
+	if (ATK == true) { 
+		time += 1;
+		// 5s , se tardaria 1 min en matarnos
+		if (time >= 50) {
+			Player1->setVida(Player1->getVida() - Enemigo->getDaño());
+			time = 0;
 		}
 	}
-	else {
-		Pers = false;
+
+	// RANGO PARA MATARLO (r = 18)
+	if (DeltaPosition->X > (pos->X - 18.0f) && DeltaPosition->X < (pos->X + 18.0f)) {
+		if (DeltaPosition->Z > (pos->Z - 18.0f) && DeltaPosition->Z < (pos->Z + 18.0f)) { 
+			if (input->GetKey(KeyCode.U) || input->GetKeyXbox(KeyCode.XBOX_X)) {
+				Enemigo->setVida(Enemigo->getVida() - Player1->getDaño());
+				// se muere el enemigo
+				if (Enemigo->getVida() <= 0) {
+					SIoNO[0] = 1;
+				}
+			}
+		}
 	}
+
+	// RANGO DE VISION DEL BICHO (r = 30)
+	// bicho 1
+	if (SIoNO[0] == 0) {
+		if (DeltaPosition->X > (pos->X - 30.0f) && DeltaPosition->X < (pos->X + 30.0f)) {
+			if (DeltaPosition->Z > (pos->Z - 30.0f) && DeltaPosition->Z < (pos->Z + 30.0f)) { Pers = true; }
+			else { Pers = false; }
+		}
+		else { Pers = false; }
+	}
+	else { Pers = false; }
 	if (Pers == true) {
 		if (pos->X < DeltaPosition->X) {
 			pos->X += .19;
